@@ -7,6 +7,9 @@ import { authentication } from "../firebase-config";
 import PhoneInput from 'react-phone-number-input'
 import 'react-phone-number-input/style.css'
 import { RecaptchaVerifier , signInWithPhoneNumber } from 'firebase/auth';
+import { BackGroundLight } from "../components/minor-components/credentials-pages/BackgoundLight";
+import { CredentialsCard } from "../components/minor-components/credentials-pages/CredentialsCard";
+import { InputField } from "../components/minor-components/fields/InputField";
 
 
 export const Signup = () => {
@@ -58,73 +61,64 @@ export const Signup = () => {
       };
 
     return (
-        <div className="bg-grey-lighter min-h-screen flex flex-col">
-            <div className="container max-w-md mx-auto flex-1 flex flex-col items-center justify-center px-2">
-                <div className="bg-white px-6 py-8 rounded shadow-lg text-black w-full">
-                    <img className='w-36 mx-auto' src={logo} alt="logo" />
-                    <h1 className="mb-8 text-md my-4 text-center text-2xl">SIGN UP</h1>
-                    <form onSubmit={handleSubmit}>
-                    <h2 className="text-sm my-2.5">First Name</h2>
-                    <input
-                        type="text"
-                        className="block border border-grey-light w-full p-2 rounded mb-4"
-                        name="firstName"
-                        value={credentials.firstName}
-                        onChange={onChange}
-                        placeholder="Full Name" />
+      <BackGroundLight>
+        <CredentialsCard>       
+          <img className='w-36 mx-auto' src={logo} alt="logo" />
+          <h1 className="mb-8 text-md my-4 text-center text-2xl">SIGN UP</h1>
+          <form onSubmit={handleSubmit}>
+              <InputField
+                  label="Full Name*"
+                  type="text"
+                  id="firstName"
+                  value={credentials.firstName} 
+                  onChange={onChange}
+                  placeholder="First Name"
+              />
+              <InputField
+                  label="Last Name*"
+                  type="text"
+                  id="lastName"
+                  value={credentials.lastName} 
+                  onChange={onChange}
+                  placeholder="Last Name"
+            />
+            <InputField
+                label="Email*"
+                type="email"
+                id="email"
+                value={credentials.email} 
+                onChange={onChange}
+                placeholder="mail@example.com"
+            />
+            <PhoneInput
+                className="border  border-gray-300 text-gray-900 text-sm rounded dark:border-l-gray-700 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                international 
+                initialValueFormat="international"
+                countryCallingCodeEditable={false} 
+                defaultCountry="ZA"
+                placeholder="Enter phone number"
+                value={value}
+                onChange={setValue}
+            />
+            <InputField
+                label="Password*"
+                type="password"
+                id="password"
+                value={credentials.password} 
+                onChange={onChange}
+                placeholder="Password"
+            />
+            <button
+                type="submit"
+                className="w-full text-center py-2 rounded bg-myBg hover:bg-green-dark focus:outline-none my-1"
+            >Sign Up</button>
 
-                    <h2 className="text-sm my-2.5">Last Name</h2>
-                    <input
-                        type="text"
-                        className="block border border-grey-light w-full p-2 rounded mb-4"
-                        name="lastName"
-                        value={credentials.lastName}
-                        onChange={onChange}
-                        placeholder="Full Name" />
-                    <h2 className="text-sm my-2.5">Email</h2>
-                    <input
-                        type="text"
-                        className="block border border-grey-light w-full p-2 rounded mb-4"
-                        name="email"
-                        value={credentials.email}
-                        onChange={onChange}
-                        placeholder="Email" />
-                    <h2 className="text-sm my-2.5">Phone Number</h2>
-                    <PhoneInput
-                        className="border  border-gray-300 text-gray-900 text-sm rounded dark:border-l-gray-700 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        international 
-                        initialValueFormat="international"
-                        countryCallingCodeEditable={false} 
-                        defaultCountry="ZA"
-                        placeholder="Enter phone number"
-                        value={value}
-                        onChange={setValue}
-                    />
-                    <h2 className="text-sm my-2.5">Password</h2>
-                    <input
-                        type="password"
-                        className="block border border-grey-light w-full p-2 rounded mb-4"
-                        name="password"
-                        value={credentials.password}
-                        onChange={onChange}
-                        placeholder="Password" />
-
-
-                    <button
-                        type="submit"
-                        className="w-full text-center py-2 rounded bg-myBg hover:bg-green-dark focus:outline-none my-1"
-                    >Sign Up</button>
-
-                    <div className="text-left text-sm text-grey-dark mt-4 my-4">
-                        Already have an account? <span className="text-blue-600"><Link to='/login'>Sign In</Link></span>
-                    </div>
-                        
-                    </form>
-                </div>
-            </div>
-            <div id="recaptcha-container">
-
-            </div>
-        </div>
+            <div className="text-left text-sm text-grey-dark mt-4 my-4">
+                Already have an account? <span className="text-blue-600"><Link to='/login'>Sign In</Link></span>
+            </div>       
+          </form>
+          <div id="recaptcha-container"></div>
+          </CredentialsCard>
+        </BackGroundLight> 
     )
 }

@@ -90,9 +90,9 @@ const SideBar = () => {
 
         },
         {
-            title: 'Restaurant',
-            path: '/restaurant',
-            childrens: restaurantArray,
+            title: 'My Restaurant',
+            path: '/restaurant/view',
+            // childrens: restaurantArray,
             svg: restaurant
         },
         {

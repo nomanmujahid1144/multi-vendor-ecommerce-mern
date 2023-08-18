@@ -8,6 +8,10 @@ import { useState } from "react";
 import { axiosInstance } from "../constants/axiosInstance";
 import { Loader } from "../components/minor-components/Loader";
 import { useNavigate } from 'react-router';
+import { BackGroundLight } from "../components/minor-components/credentials-pages/BackgoundLight";
+import { CredentialsCard } from "../components/minor-components/credentials-pages/CredentialsCard";
+import { InputField } from "../components/minor-components/fields/InputField";
+
 export const Login = () => {
     const navigate = useNavigate()
     const alert = useAlert()
@@ -55,42 +59,39 @@ export const Login = () => {
     return (
         <>
         {!loading ? (
-            <div className="bg-grey-lighter min-h-screen flex flex-col">
-            <div className="container max-w-md mx-auto flex-1 flex flex-col items-center justify-center px-2">
-                <div className="bg-white px-6 py-8 rounded shadow-lg text-black w-full">
-                    <img className='w-36 mx-auto' src={logo} alt="logo" />
-                    <h1 className="mb-8 text-md my-4 text-center text-2xl">SIGN IN</h1>
-                    <h2 className="text-sm my-2.5">Email</h2>
-                    <input
-                        type="email"
-                        className="block border border-grey-light w-full p-2 rounded mb-4"
-                        name="email"
-                        value={credentials.email} 
-                        onChange={onChange}
-                        placeholder="Email" />
-                    <h2 className="text-sm my-2.5">Password</h2>
-                    <input
-                        type="password"
-                        className="block border border-grey-light w-full p-2 rounded mb-4"
-                        name="password"
-                        valvalue={credentials.password}
-                        onChange={onChange}
-                        placeholder="Password" />
-
-                    <button
-                        type="submit"
-                        className="w-full text-center py-2 rounded bg-myBg hover:bg-green-dark focus:outline-none my-1"
-                        onClick={sendCreds}
-                        disabled={credentials.email && credentials.password ? false :true}
-                    >Login</button>
-
-                    <div className="text-left text-sm text-grey-dark mt-4 my-4">
-                        Do not  have an account? <span className="text-blue-600"><Link to='/signup'>Sign Up</Link></span>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+            <BackGroundLight>
+                <CredentialsCard>
+                        <img className='w-36 mx-auto' src={logo} alt="logo" />
+                        <h1 className="mb-8 text-md my-4 text-center text-2xl">SIGN IN</h1>
+                        <form onSubmit={sendCreds}>
+                            <InputField
+                                label="Email*"
+                                type="email"
+                                id="email"
+                                value={credentials.email} 
+                                onChange={onChange}
+                                placeholder="mail@example.com"
+                            />
+                            <InputField
+                                label="Password*"
+                                type="password"
+                                id="password"
+                                value={credentials.password} 
+                                onChange={onChange}
+                                placeholder="Password"
+                            />
+                            <button
+                                type="submit"
+                                className="w-full text-center py-2 rounded bg-myBg hover:bg-green-dark focus:outline-none my-1"
+                                disabled={credentials.email && credentials.password ? false : true}>
+                                Login
+                            </button>
+                        </form>
+                        <div className="text-left text-sm text-grey-dark mt-4 my-4">
+                            Do not  have an account? <span className="text-blue-600"><Link to='/signup'>Sign Up</Link></span>
+                        </div>
+                </CredentialsCard>
+            </BackGroundLight>
         ) :(
             <Loader />
         )}

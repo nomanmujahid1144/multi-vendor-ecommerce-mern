@@ -16,20 +16,19 @@ import { WebsiteSetting } from "./components/major-components/WebsiteSetting";
 import { AppSettings } from "./components/major-components/AppSettings";
 import { Radius } from "./components/major-components/Radius";
 import { Otp } from "./components/major-components/Otp";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { adminLogin } from "./redux/Actions/ProfileActions";
 import { useJsApiLoader} from "@react-google-maps/api";
-import { Account } from "./components/major-components/Account";
 import { SingleRestaurant } from "./components/major-components/SingleRestaurant";
 import { AllRestaurants } from "./components/major-components/AllRestaurants";
 import { AboutUs } from "./components/major-components/AboutUs";
+import { TrakingDetails } from "./components/minor-components/TrackingDetails";
+import { Layout } from "./components/minor-components/Layout";
 
 
 import "./components/fontawesomeIcons"
-import { Recentorders } from "./components/minor-components/RecentOrders";
-import { TrakingDetails } from "./components/minor-components/TrackingDetails";
-import { Layout } from "./components/minor-components/Layout";
+import { ApplyNewRestaurant } from "./components/major-components/apply-new-restaurant/ApplyNewRestaurant";
 
 
 const places = ["places"]
@@ -59,22 +58,23 @@ function App() {
               <Route path='/login' element={<Login />} />
               <Route path='/signup' element={<Signup />} />
               <Route path='/verification' element={<Otp />} />
+              <Route path='/restaurant/apply' element={<ApplyNewRestaurant />} />
               <Route path='/' element={localStorage.getItem('token') ? <SideAndNavbar /> : <Login />} >
                 <Route index element={<DashboardHeroSection />} />
                 <Route path='/products' element={<Products />} />
                 <Route path='/orders' element={<Orders />} />
                 <Route path='/drivers' element={<Drivers />} />
                 <Route path='/categories' element={<Categories />} />
-                <Route path='/customers' element={<Customers />} />
-                <Route path='/salesPromotion' element={<SalesPromotion />} />
-                <Route path='/accounts' element={<Accounts />} />
-                <Route path='/storelocator' element={<StoreLocator />} />
+                {/* <Route path='/customers' element={<Customers />} /> */}
+                {/* <Route path='/salesPromotion' element={<SalesPromotion />} /> */}
+                {/* <Route path='/accounts' element={<Accounts />} />
+                <Route path='/storelocator' element={<StoreLocator />} /> */}
                 <Route path='/earnings' element={<WebsiteSetting />} />
                 <Route path='/appSettings' element={<AppSettings />} />
                 <Route path='/aboutus' element={<AboutUs />} />
-                <Route path='/all-restaurants' element={<AllRestaurants />} />
+                {/* <Route path='/all-restaurants' element={<AllRestaurants />} />
                 <Route path='/add-restaurant' element={<Radius />} />
-                <Route path='/singleRestaurant/:restaurantName' element={<SingleRestaurant />} />
+                <Route path='/singleRestaurant/:restaurantName' element={<SingleRestaurant />} /> */}
                 <Route path='/trackorder' element={<TrakingDetails /> } />
               </Route>
           </Routes>
