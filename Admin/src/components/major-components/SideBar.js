@@ -23,51 +23,51 @@ const SideBar = () => {
 
     const token = useSelector((state) => state.ProfileReducer);
 
-    React.useEffect(() => {
-        if (token) {
-            getShopName();
-        }
-    }, [token]);
+    // React.useEffect(() => {
+    //     if (token) {
+    //         getShopName();
+    //     }
+    // }, [token]);
 
-    const getShopName = async () => {
-        try {
-            const res = await axiosInstance.get('/api/v1/admin/getradius', {
-                headers: {
-                    "authorization": localStorage.getItem('token')
-                }
-            });
+    // const getShopName = async () => {
+    //     try {
+    //         const res = await axiosInstance.get('/api/v1/admin/getradius', {
+    //             headers: {
+    //                 "authorization": localStorage.getItem('token')
+    //             }
+    //         });
 
-            if (res.data.success) {
-                const shops = res.data.data.map((restu) => {
-                    return {
-                        title: restu.shopName,
-                        path: `/singleRestaurant/${restu.products?.restaurantName}`,
-                        action: 1
-                    };
-                });
+    //         if (res.data.success) {
+    //             const shops = res.data.data.map((restu) => {
+    //                 return {
+    //                     title: restu.shopName,
+    //                     path: `/singleRestaurant/${restu.products?.restaurantName}`,
+    //                     action: 1
+    //                 };
+    //             });
                 
-                // Manually create "All Shops" and "Add Shop" links
-                const allShopsLink = {
-                    title: 'All Restaurants',
-                    path: '/all-restaurants', // Update this path if needed
-                    action: 0
-                };
-                const addShopLink = {
-                    title: 'Add Restaurant',
-                    path: '/add-restaurant', // Update this path if needed
-                    action: 0
-                };
+    //             // Manually create "All Shops" and "Add Shop" links
+    //             const allShopsLink = {
+    //                 title: 'All Restaurants',
+    //                 path: '/all-restaurants', // Update this path if needed
+    //                 action: 0
+    //             };
+    //             const addShopLink = {
+    //                 title: 'Add Restaurant',
+    //                 path: '/add-restaurant', // Update this path if needed
+    //                 action: 0
+    //             };
 
-                // Concatenate the links and fetched shops
-                const updatedRestaurantArray = [allShopsLink, addShopLink, ...shops];
-                setRestaurantArray(updatedRestaurantArray);
-            } else {
-                alert.show('Not Found');
-            }
-        } catch (error) {
-            console.error("Error fetching shop names:", error);
-        }
-    }
+    //             // Concatenate the links and fetched shops
+    //             const updatedRestaurantArray = [allShopsLink, addShopLink, ...shops];
+    //             setRestaurantArray(updatedRestaurantArray);
+    //         } else {
+    //             alert.show('Not Found');
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching shop names:", error);
+    //     }
+    // }
 
     const sidebarData = [
         {
@@ -177,12 +177,17 @@ const SideBar = () => {
                                                 </div>
                                                 <div className="sidebar-content" style={{ maxHeight: openChildIndex === index ? '9999px' : '0' }}>
                                                     <ul className='flex flex-col'>
-                                                        {/* <li className='p-1 mt-2 flex justify-between cursor-pointer'>
+                                                        <li className='p-1 mt-2 flex justify-between cursor-pointer'>
                                                             <NavLink end to='/all-restaurants' className={({ isActive }) => (isActive ? 'text-myBg block ml-2' : 'text-gray-800 block ml-2')}>
-                                                                All Shops
+                                                                All Restaurants
                                                             </NavLink>
                                                         </li>
                                                         <li className='p-1 mt-2 flex justify-between cursor-pointer'>
+                                                            <NavLink end to='/new-restaurants' className={({ isActive }) => (isActive ? 'text-myBg block ml-2' : 'text-gray-800 block ml-2')}>
+                                                                New Restaurants
+                                                            </NavLink>
+                                                        </li>
+                                                        {/* <li className='p-1 mt-2 flex justify-between cursor-pointer'>
                                                             <NavLink end to='/add-restaurant' className={({ isActive }) => (isActive ? 'text-myBg block ml-2' : 'text-gray-800 block ml-2')}>Add Shop</NavLink>
                                                         </li> */}
                                                         {item.childrens.map((child, childIndex) => (

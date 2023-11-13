@@ -39,8 +39,6 @@ export const addCategory = (values, formData, navigate, alert, setIsOpen) => {
         }
     }
 }
-
-
 export const updateCategory = (values, formData, navigate, alert, setIsOpen) => {
     return async (dispatch) => {
         dispatch(selectProgressBarState(true))
@@ -80,7 +78,6 @@ export const updateCategory = (values, formData, navigate, alert, setIsOpen) => 
         }
     }
 }
-
 export const getCategories = () => {
     return async (dispatch) => {
         dispatch(selectProgressBarState(true))
@@ -102,7 +99,6 @@ export const getCategories = () => {
         }
     }
 }
-
 export const deleteCategory = (id, navigate, alert) => {
     return async (dispatch) => {
         dispatch(selectProgressBarState(true))

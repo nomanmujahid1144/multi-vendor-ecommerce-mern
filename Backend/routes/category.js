@@ -7,6 +7,7 @@ const Product = require('../models/Product');
 
 const {
   addCategory,
+  getAllRestaurantCategories,
   getAllCategories,
   getSingleBrand,
   deleteCategories,
@@ -14,9 +15,10 @@ const {
   getAllProductsClientSide,
 } = require("../controllers/category.controller");
 const router = express.Router();
+const checkAuth = require('../middleware/check-auth');
 
-
-router.post("/addcategory",  addCategory);
+router.post("/addcategory", checkAuth,  addCategory);
+router.get("/getrestaurantcategories", checkAuth, getAllRestaurantCategories);
 router.get("/getcategories", getAllCategories);
 router.get("/getsinglebrand", getSingleBrand);
 

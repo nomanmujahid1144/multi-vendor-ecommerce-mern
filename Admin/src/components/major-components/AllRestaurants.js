@@ -31,7 +31,7 @@ export const AllRestaurants = () => {
     }, [token])
     const getRadius = async () => {
         try {
-            const res = await axiosInstance.get('/api/v1/admin/getradius', {
+            const res = await axiosInstance.get('/api/v1/restaurant/getradius', {
                 headers: {
                     "Authorization": token
                 }

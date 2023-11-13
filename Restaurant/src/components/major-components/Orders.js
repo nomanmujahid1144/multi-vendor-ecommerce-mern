@@ -53,12 +53,13 @@ export const Orders = () => {
    
     const getAllOrders = async () => {
         dispatch(selectProgressBarState(true))
-        const orders = await axiosInstance.get(`/api/v1/order/getallordersadmin`, {
+        const orders = await axiosInstance.get(`/api/v1/order/get-all-restaurant-orders`, {
             headers: {
                 "Authorization": token
             }
         })
         if (orders.data.success) {
+            console.log(orders.data, 'DATA')
             let filteredData = orders?.data?.data?.pendingOrder.map((item) => {
                 return {
                     id: item._id,
@@ -69,9 +70,9 @@ export const Orders = () => {
                     productQuantity: item.details.map((item2) => {
                         return item2.quantity
                     }).join(' / '),
-                    restaurnatName: item.restaurantID.shopName,
-                    totalPrice: item.grandTotalPrice,
-                    userName: item.userId.firstName,
+                    restaurnatName: item.restaurantId.restaurantName,
+                    totalPrice: item.totalPrice,
+                    userName: item.userId.fullName,
                     userEmail: item.userId.email,
                     userPhoneNumber: item.userId.phoneNumber,
                 }
@@ -87,9 +88,9 @@ export const Orders = () => {
                     productQuantity: item.details.map((item2) => {
                         return item2.quantity
                     }).join(' / '),
-                    restaurnatName: item.restaurantID.shopName,
-                    totalPrice: item.grandTotalPrice,
-                    userName: item.userId.firstName,
+                    restaurnatName: item.restaurantId.restaurantName,
+                    totalPrice: item.totalPrice,
+                    userName: item.userId.fullName,
                     userEmail: item.userId.email,
                     userPhoneNumber: item.userId.phoneNumber,
                 }
@@ -105,9 +106,9 @@ export const Orders = () => {
                     productQuantity: item.details.map((item2) => {
                         return item2.quantity
                     }).join(' / '),
-                    restaurnatName: item.restaurantID.shopName,
-                    totalPrice: item.grandTotalPrice,
-                    userName: item.userId.firstName,
+                    restaurnatName: item.restaurantId.restaurantName,
+                    totalPrice: item.totalPrice,
+                    userName: item.userId.fullName,
                     userEmail: item.userId.email,
                     userPhoneNumber: item.userId.phoneNumber,
                 }
@@ -124,9 +125,9 @@ export const Orders = () => {
                         return item2.quantity
                     }).join(' / '),
                     status : item.status,
-                    range : item.restaurantID.radius,
+                    range : item.restaurantId.radius,
                     geometry : item.restaurantID.geometry.coordinates,
-                    restaurnatName: item.restaurantID.shopName,
+                    restaurnatName: item.restaurantId.restaurantName,
                     totalPrice: item.grandTotalPrice,
                     userName: item.userId.firstName,
                     userEmail: item.userId.email,
@@ -145,9 +146,9 @@ export const Orders = () => {
                     productQuantity: item.details.map((item2) => {
                         return item2.quantity
                     }).join(' / '),
-                    restaurnatName: item.restaurantID.shopName,
-                    totalPrice: item.grandTotalPrice,
-                    userName: item.userId.firstName,
+                    restaurnatName: item.restaurantId.restaurantName,
+                    totalPrice: item.totalPrice,
+                    userName: item.userId.fullName,
                     userEmail: item.userId.email,
                     userPhoneNumber: item.userId.phoneNumber,
                 }

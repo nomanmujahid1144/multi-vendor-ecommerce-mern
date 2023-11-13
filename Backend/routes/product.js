@@ -7,6 +7,7 @@ const Product = require('../models/Product');
 
 const {
   addProduct,
+  getAllRestaurantProducts,
   uploadImage,
   getAllProducts,
   getdiscountproducts,
@@ -21,9 +22,11 @@ const {
   getAllFavourites,
 } = require("../controllers/product.controllers");
 const router = express.Router();
+const checkAuth = require('../middleware/check-auth');
 
-router.post("/addproduct",  addProduct);
-router.get("/getproducts", getAllProducts);
+router.post("/addproduct", checkAuth ,  addProduct);
+router.get("/get-restaurant-products", checkAuth, getAllProducts);
+router.get("/getproducts", getAllRestaurantProducts);
 router.get("/getdiscountproducts", getdiscountproducts);
 router.get("/getfeatureproducts", getFeatureProducts);
 router.get("/getproductbybrand", getProductByBrand);

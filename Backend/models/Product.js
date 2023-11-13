@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema({
+    restaurantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant' },
     name: {
         type: String,
         default: ''
     },
     type: {
         type: String,
-        required: [true, "Please Add Type of Product"]
     },
     description: {
         type: String,
@@ -21,8 +21,7 @@ const productSchema = new mongoose.Schema({
         required: [true, "Please Add Category"]
     },
     subCategory: {
-        type: String,
-        required: [true, "Please Add Sub-Category"]
+        type: String
     },
     brand: {
         type: String,

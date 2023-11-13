@@ -24,7 +24,7 @@ const orderSchema = new mongoose.Schema({
             type: String
         }
     }],
-    restaurantID :  {type: mongoose.Schema.Types.ObjectId , ref : 'Radius'},
+    restaurantId :  {type: mongoose.Schema.Types.ObjectId , ref : 'Restaurant'},
     status: {
         type: Number,
         default: 0

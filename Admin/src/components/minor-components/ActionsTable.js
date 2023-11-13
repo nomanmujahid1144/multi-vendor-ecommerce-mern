@@ -63,7 +63,201 @@ export const ActionsTable = (props) => {
             setMyFilteredData(filteredData)
         }
     }
-    if (props.isProduct) {
+    if (props.isUnApprovedRestaurants) {
+        return (
+            <div className='py-2 bg-gray-50'>
+                <div className='divide-y  divide-gray-100 bg-white rounded-lg  shadow-lg'>
+                    <div className='px-5 pt-4 h-10 my-0 flex flex-col items-start justify-between'>
+                        <h2 className='font-semibold text-gray-800 text-lg'>Un Approved Restaurants</h2>
+                        <p className='text-xs'>Details</p>
+                    </div>
+                    <div className="w-full px-4 py-4 my-8 bg-white ">
+                        <div className="flex items-start justify-between">
+                            <div className="flex items-center justify-start gap-2 h-12">
+                                <h2 className='text-xs'>
+                                    Show
+                                </h2>
+                                <div className="flex w-20">
+                                    <input type="text"
+                                        value={itemsPerPage}
+                                        // onChange={(e) => { setItemsPerPage(e.target.value) }}
+                                        disabled={true}
+                                        className="bg-white text-sm text-gray-900 text-center 
+                                                 focus:outline-none border border-gray-800 focus:border-gray-600 
+                                                rounded-sm w-full h-8 "/>
+                                    <div className='flex flex-col items-center gap-2 justify-center ml-[-15px]'>
+                                        <img onClick={(e) => setItemsPerPage(itemsPerPage < data.length ? itemsPerPage + 1 : itemsPerPage)} className='w-2 cursor-pointer' src={topArrow} alt='top-arrow' />
+                                        <img onClick={(e) => setItemsPerPage(itemsPerPage > 5 ? itemsPerPage - 1 : itemsPerPage)} className='w-2 cursor-pointer' src={bottomArrow} alt='bottom-arrow' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='flex flex-col justify-around gap-2'>
+                                <input placeholder="Type to search..."
+                                    value={searchText}
+                                    onChange={(e) => handleChange(e.target.value)}
+                                    type="text"
+                                    className="
+                                        bg-white text-sm text-gray-900 text-center 
+                                        focus:outline-none border border-gray-800 focus:border-gray-600 
+                                         rounded-sm w-18 h-8"
+                                />
+                                <div>
+                                    {!selectedID.length <= 0 ? <button onClick={() => dispatch(deleteProducts(selectedID, navigate, alert))} className='py-2 px-4 bg-myBg text-xs '>Delete Selected Product</button> : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex flex-col  justify-center h-full py-4">
+                            <div className="w-full  mx-auto bg-white shadow-lg rounded-sm ">
+                                <div className="py-3 ">
+                                    <div className="overflow-x-auto">
+                                        <table className="table-auto w-full ">
+                                            <thead className="text-sm w-full h-14 bg-myBg font-semibold uppercase text-gray-600 ">
+                                                <tr>
+                                                    {props.checkBox ? (
+                                                        <th className='py-4'>
+                                                            <p className="p-2 whitespace-nowrap flex items-center w-1/2">
+                                                                {/* <input className='mx-2' type="checkbox" id="selectAll" name="A3-confirmation" value="selectAll" /> */}
+                                                            </p>
+                                                        </th>
+                                                    ) : ''}
+
+                                                    {
+                                                        tableColumns.map((item, index) => (
+                                                            <th key={index} className="p-2 whitespace-nowrap font-semibold text-left">
+                                                                {item}
+                                                            </th>
+                                                        ))
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody className="text-sm  divide-gray-100">
+
+                                                {!searchText ? <>
+                                                    {data.slice(pagesVisited, pagesVisited + itemsPerPage).map((item, index) => (
+                                                        <tr key={index}>
+                                                            {props.checkBox ? (
+                                                                <td className={`text-left text-xs px-2 py-8 whitespace-nowrap  ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                    <input onChange={() => handleSelectedID(item._id)} className='mx-2 cursor-pointer' type="checkbox" />
+                                                                </td>
+                                                            ) : (
+                                                                ''
+                                                            )}
+                                                            <td className={`text-left  px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <img src={`${baseURL}${item.restaurantLogo}`} className={`text-left text-xs w-14 h-14 rounded-[50%]`} />
+                                                            </td>
+                                                            <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <p className={`text-left text-md `}>{item.restaurantName}</p>
+                                                            </td>
+                                                            <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <p className="text-left text-md">{item.owner_FirstName}</p>
+                                                            </td>
+
+                                                            <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <p className="text-left text-md">{item.owner_PhoneNumber}</p>
+                                                            </td>
+                                                            <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <p className="text-left text-md">{item.zone}</p>
+                                                            </td>
+
+                                                            <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <p className="text-left text-md">{item.tax}</p>
+                                                            </td>
+                                                                <td className={`text-left text-md px-2 py-8 whitespace-nowrap  ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                    <button onClick={() => {
+                                                                        global.editId = item._id
+                                                                        props.modal(true)
+
+                                                                    }} className='py-2 px-4 bg-myBg text-xs rounded-lg'>
+                                                                        View
+                                                                    </button>
+                                                            </td>
+                                                            <td className={`text-left text-md relative px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <Dropdown isUnApprovedRestaurants={true} id={item._id} />
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                    <Modal open={props.isOpen} onClose={() => props.modal(false)} >
+                                                        <AddProductsForm key={parseInt(Math.random() * 10000)} isAdd={false} modal={props.modal} />
+                                                    </Modal>
+                                                </> : <>
+                                                    {myFilteredData.map((item, index) => (
+                                                        <tr key={index}>
+                                                        {props.checkBox ? (
+                                                            <td className={`text-left text-xs px-2 py-8 whitespace-nowrap  ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <input onChange={() => handleSelectedID(item._id)} className='mx-2 cursor-pointer' type="checkbox" />
+                                                            </td>
+                                                        ) : (
+                                                            ''
+                                                        )}
+                                                        <td className={`text-left  px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <img src={`${baseURL}${item.restaurantLogo}`} className={`text-left text-xs w-14 h-14 rounded-[50%]`} />
+                                                        </td>
+                                                        <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <p className={`text-left text-md `}>{item.restaurantName}</p>
+                                                        </td>
+                                                        <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <p className="text-left text-md">{item.owner_FirstName}</p>
+                                                        </td>
+
+                                                        <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <p className="text-left text-md">{item.owner_PhoneNumber}</p>
+                                                        </td>
+                                                        <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <p className="text-left text-md">{item.zone}</p>
+                                                        </td>
+
+                                                        <td className={`text-left text-md px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <p className="text-left text-md">{item.tax}</p>
+                                                        </td>
+                                                            <td className={`text-left text-md px-2 py-8 whitespace-nowrap  ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                                <button onClick={() => {
+                                                                    global.editId = item._id
+                                                                    props.modal(true)
+
+                                                                }} className='py-2 px-4 bg-myBg text-xs rounded-lg'>
+                                                                    View
+                                                                </button>
+                                                        </td>
+                                                        <td className={`text-left text-md relative px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
+                                                            <Dropdown isUnApprovedRestaurants={true} id={item._id} />
+                                                        </td>
+                                                    </tr>
+                                                    ))}
+                                                    <Modal open={props.isOpen} onClose={() => props.modal(false)} >
+                                                        <AddProductsForm key={parseInt(Math.random() * 10000)} isAdd={false} modal={props.modal} />
+                                                    </Modal>
+                                                </>
+                                                }
+                                                {data.length === 0 && <p className='py-8 px-2 font-semibold'>No Records Found By This Key Word </p>}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='flex items-center justify-between'>
+                            <p className='text-xs text-left'>
+                                Showing {data.slice(pagesVisited, pagesVisited + itemsPerPage).length} results of {data.length}
+                            </p>
+                            <div className='flex items-center justify-center'>
+                                <ReactPaginate
+                                    previousLabel={"Previous"}
+                                    nextLabel={"Next"}
+                                    pageCount={pageCount}
+                                    onPageChange={changePage}
+                                    containerClassName={"flex justify-between gap-3 items-center w-full text-xs rounded no-underline"}
+                                    previousLinkClassName={"py-2 px-4 rounded bg-gray-200 w-24 hover:bg-gray-300 mx-2 no-underline"}
+                                    nextLinkClassName={"py-2 px-4 rounded bg-gray-200 w-24 hover:bg-gray-300 mx-2 no-underline"}
+                                    disabledClassName={"pointer-events-none no-underline"}
+                                    activeClassName={"py-2 px-4 rounded bg-myBg hover:bg-[#edcb58] hover:text-white text-xs mx-2 no-underline"}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div >
+        )
+    }else if (props.isProduct) {
         return (
             <div className='py-2 bg-gray-50'>
                 <div className='divide-y  divide-gray-100 bg-white rounded-lg  shadow-lg'>
@@ -266,8 +460,7 @@ export const ActionsTable = (props) => {
                 </div>
             </div >
         )
-    }
-    else if (props.isCategory) {
+    }else if (props.isCategory) {
         return (
             <div className='py-2 bg-gray-50'>
                 <div className='divide-y  divide-gray-100 bg-white rounded-lg  shadow-lg'>
@@ -450,7 +643,7 @@ export const ActionsTable = (props) => {
                 </div>
             </div >
         )
-    } else if (props.isOrders) {
+    }else if (props.isOrders) {
         return (
             <div className='py-2 bg-gray-50'>
                 <div className='divide-y  divide-gray-100 bg-white rounded-lg  shadow-lg'>
@@ -612,8 +805,7 @@ export const ActionsTable = (props) => {
                 </div>
             </div >
         )
-    }
-    else {
+    }else {
         return (
             <div className='py-2 bg-gray-50'>
                 <div className='divide-y  divide-gray-100 bg-white rounded-lg  shadow-lg'>

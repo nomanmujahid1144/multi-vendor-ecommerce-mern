@@ -22,8 +22,7 @@ const usersColumns = [
 ]
 const DashboardHeroSection = (props) => {
 
-
-    const token = useSelector(
+    const {token} = useSelector(
         (state) => state.ProfileReducer
     );
     const alert = useAlert()
@@ -46,7 +45,7 @@ const DashboardHeroSection = (props) => {
     }, [token])
     const getRadius = async () => {
         try {
-            const res = await axiosInstance.get('/api/v1/admin/getradius', {
+            const res = await axiosInstance.get('/api/v1/restaurant/getradius', {
                 headers: {
                     "Authorization": token
                 }
@@ -68,7 +67,7 @@ const DashboardHeroSection = (props) => {
     const loadDashboardData = async () => {
         try {
             dispatch(selectProgressBarState(true))
-            const res = await axiosInstance.get('/api/v1/admin/getdashboarddata', {
+            const res = await axiosInstance.get('/api/v1/restaurant/getdashboarddata', {
                 headers: {
                     "Authorization": token
                 }

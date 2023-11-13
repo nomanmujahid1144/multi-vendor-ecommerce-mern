@@ -30,6 +30,7 @@ import "./components/fontawesomeIcons"
 import { Recentorders } from "./components/minor-components/RecentOrders";
 import { TrakingDetails } from "./components/minor-components/TrackingDetails";
 import { Layout } from "./components/minor-components/Layout";
+import { UnVerifiedRestaurants } from "./components/major-components/UnVerifiedRestaurants";
 
 
 const places = ["places"]
@@ -65,6 +66,7 @@ function App() {
                 <Route path='/orders' element={<Orders />} />
                 <Route path='/drivers' element={<Drivers />} />
                 <Route path='/categories' element={<Categories />} />
+                <Route path='/add-new-restaurant' element={<Radius />} />
                 <Route path='/customers' element={<Customers />} />
                 <Route path='/salesPromotion' element={<SalesPromotion />} />
                 <Route path='/accounts' element={<Accounts />} />
@@ -73,7 +75,7 @@ function App() {
                 <Route path='/appSettings' element={<AppSettings />} />
                 <Route path='/aboutus' element={<AboutUs />} />
                 <Route path='/all-restaurants' element={<AllRestaurants />} />
-                <Route path='/add-restaurant' element={<Radius />} />
+                <Route path='/new-restaurants' element={<UnVerifiedRestaurants />} />
                 <Route path='/singleRestaurant/:restaurantName' element={<SingleRestaurant />} />
                 <Route path='/trackorder' element={<TrakingDetails /> } />
               </Route>

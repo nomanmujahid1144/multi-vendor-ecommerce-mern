@@ -63,6 +63,7 @@ const mongoose = require('mongoose');
 
 exports.addProduct = async (req, res, next) => {
     try {
+        const restaurantId = req.user.data[1];
         console.log('got here success fully')
         const body = JSON.parse(req.query.values)
         console.log(body)
@@ -83,8 +84,6 @@ exports.addProduct = async (req, res, next) => {
             }
         }
         
-
-        
         if (!req.files) {
             return res.status(200).json({
                 success: false,
@@ -95,6 +94,7 @@ exports.addProduct = async (req, res, next) => {
         const uploadedPath = await uploadImage(req.files.image, next)
         console.log(uploadedPath, 'path')
         const product = new Product({
+            restaurantId: restaurantId,
             name: body.name,
             shopid: body.shopid,
             type: body.type,
@@ -176,8 +176,27 @@ exports.updateProduct = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-
-
+exports.getAllRestaurantProducts = async (req, res, next) => {
+    try {
+        const products = await Product.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1])})
+        console.log(products)
+        if (products.length <= 0) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                message: 'No products found'
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            data: products,
+            message: "Products found"
+        })
+    }
+    catch (err) {
+        return next(new ErrorResponse(err, 400))
+    }
+}
 exports.getAllProducts = async (req, res, next) => {
     try {
         const products = await Product.find({})

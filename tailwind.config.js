@@ -19,13 +19,21 @@ module.exports = {
         'xl': '0 8px 60px -15px rgba(0, 0, 0, 0.3)',
       },
       colors: {
-        'primaryColor': '#379683',
+        'primaryColor': 'rgb(255, 121, 24)',
         'primaryColorHover': '#5CDB95',
         'primaryColorLight': '#8EE4AF',
         'secondaryColor': '#65A6C8',
-        'bgGrayLight': '#F5F5F5',
-        'textColor': '#303133',
+
+        'bgOrangeColorLight': 'rgba(255, 121, 24, 0.3)',
+        'bgOrangeColor': 'rgb(255, 121, 24)',
+        'bgOrangeColorHover': 'rgb(163, 70, 10)',
+
+
+        'primaryTextColor': 'rgb(255, 255, 255)',
+        'textColorBlack': '#21201e',
         'textColorWhite': '#FFFFFF',
+
+        
         'loaderBg': 'rgba(0 , 0, 0 , 0.6)'
       },
     },

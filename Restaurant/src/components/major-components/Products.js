@@ -1,6 +1,6 @@
 import { ActionsTable } from "../minor-components/ActionsTable"
 import { useEffect, useState, useMemo } from "react"
-import { getProducts } from "../../redux/Actions/ProductActions"
+import { getRestaurantProducts } from "../../redux/Actions/ProductActions"
 import { useSelector, useDispatch } from "react-redux"
 import { Modal } from "../minor-components/Modal"
 import { AddProductsForm } from "../minor-components/AddProductsForm"
@@ -22,7 +22,7 @@ export const Products = () => {
     const [isUpdateOpen, setIsUpdateOpen] = useState(false)
 
 
-    const { products } = useSelector(
+    const { restaurantProducts } = useSelector(
         (state) => state.productReducer
     );
     const loading = useSelector(
@@ -30,7 +30,7 @@ export const Products = () => {
     );
 
     useEffect(() => {
-        dispatch(getProducts())
+        dispatch(getRestaurantProducts())
     }, [isOpen, isUpdateOpen])
 
     return (
@@ -50,11 +50,11 @@ export const Products = () => {
                         <AddProductsForm modal={setIsOpen} isAdd={true} />
                     </Modal>
                     {
-                        products.length === 0 ? (
+                        restaurantProducts.length === 0 ? (
                             <div className="flex justify-center items-center py-8 text-lg h-screen">No Products Found</div>
                         )
                             : (
-                                <ActionsTable isOpen={isUpdateOpen} tableColumnsReal={tableColumnsReal} checkBox={true} isProduct={true} modal={setIsUpdateOpen} key={parseInt(Math.random() * 10000)} tableDataReal={products} />
+                                <ActionsTable isOpen={isUpdateOpen} tableColumnsReal={tableColumnsReal} checkBox={true} isProduct={true} modal={setIsUpdateOpen} key={parseInt(Math.random() * 10000)} tableDataReal={restaurantProducts} />
                             )
                     }
                 </div>

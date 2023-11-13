@@ -2,7 +2,7 @@ import { ACTION_TYPES } from "../ActionTypes/ActionTypes";
 
 const initialState = {
     product: {},
-    products: []
+    restaurantProducts: []
 };
 
 const productReducer = (state = initialState, action) => {
@@ -19,16 +19,16 @@ const productReducer = (state = initialState, action) => {
                 product: action.payload,
             };
         }
-        case ACTION_TYPES.GET_PRODUCTS: {
+        case ACTION_TYPES.GET_RESTAURANT_PRODUCTS: {
             return {
                 ...state,
-                products: action.payload,
+                restaurantProducts: action.payload,
             };
         }
         case ACTION_TYPES.DELETE_PRODUCTS: {
             return {
                 ...state,
-                products: state.products.filter(
+                restaurantProducts: state.restaurantProducts.filter(
                     (product) => !action.payload.includes(product._id)
                 ),
             };

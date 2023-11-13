@@ -61,7 +61,7 @@ export default function Places() {
   }, [render, token])
   const getRadius = async () => {
     dispatch(selectProgressBarState(true))
-    const res = await axiosInstance.get('/api/v1/admin/getradius', {
+    const res = await axiosInstance.get('/api/v1/restaurant/getradius', {
       headers: {
         "Authorization": localStorage.getItem('token')
       }
@@ -78,7 +78,7 @@ export default function Places() {
   }
   const setRadiusApi = async () => {
     dispatch(selectProgressBarState(true))
-    const res = await axiosInstance.post('/api/v1/admin/setradius', placesArr)
+    const res = await axiosInstance.post('/api/v1/restaurant/setradius', placesArr)
     if (res.data.success) {
       dispatch(selectProgressBarState(false))
       alert.show('radius added successfully',
@@ -185,7 +185,6 @@ function Map({ selected, radius }) {
     </>
   );
 }
-
 
 
 const PlacesAutocomplete = ({ setSelected, selected, setRadius, radius, setFormattedAddress, setShopName, setDelivery, setPhoneNumber, setMerchantId, setMerchantKey }) => {
@@ -339,7 +338,7 @@ const Areas = ({ placesArr, setPlacesArr, setRadiusApi, count, setCount, setIsOp
                       <p className={`text-left text-md `}> {item.phoneNumber}</p>
                     </td>
                     <td className={`text-left  px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                      <p className={`text-left text-md `}> {item.geometry.coordinates.join(" - ")}</p>
+                      <p className={`text-left text-md `}> {item.geometry.coordinates?.join(" - ")}</p>
                     </td>
                     <td className={`text-left  px-2 py-8 whitespace-nowrap ${index % 2 !== 0 ? 'bg-white' : 'bg-gray-50'}`}>
                       <p className={`text-left text-md `}> {item.radius}</p>

@@ -13,7 +13,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const DeliveryPerson = require("./models/DeliveryPerson");
 const Order = require("./models/Order");
-const Radius = require("./models/Radius");
+const Radius = require("./models/Restaurant");
 const Product = require("./models/Product");
 const app = express();
 const http = require("http").Server(app);
@@ -56,6 +56,7 @@ const limiter = rateLimit({
 //Route files
 const user = require("./routes/user");
 const admin = require("./routes/admin");
+const restaurant = require("./routes/restaurant");
 const announcement = require("./routes/announcement");
 const faqs = require("./routes/faqs");
 const about = require("./routes/about");
@@ -82,6 +83,7 @@ app.use(cors());
 
 app.use("/api/v1/user", user);
 app.use("/api/v1/admin", admin);
+app.use("/api/v1/restaurant", restaurant);
 app.use("/api/v1/announcement", announcement);
 app.use("/api/v1/about", about);
 app.use("/api/v1/blog", blog);
@@ -102,7 +104,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 1616;
 
 const server = http.listen(PORT, console.log(`server running on port ${PORT}`));
 

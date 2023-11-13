@@ -46,15 +46,15 @@ export const AddCategoriesForm = (props) => {
     const [subCategory, setSubCategory] = useState([])
     const [brandType, setBrandType] = useState([])
     const [imgCheck, setImgCheck] = useState(false)
-    const { categories } = useSelector(
+    const { restaurantCategories } = useSelector(
         (state) => state.categoryReducer
     );
     useEffect(() => {
         if (!status) {
-            setEditItem(categories.filter(
+            setEditItem(restaurantCategories.filter(
                 (category) => category._id === global.editId
             ))
-            getCategory(categories.filter(
+            getCategory(restaurantCategories.filter(
                 (category) => category._id === global.editId
             ))
 

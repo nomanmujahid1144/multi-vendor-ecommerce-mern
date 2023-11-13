@@ -18,3 +18,25 @@
 .slick-next {
     right: 5px;
 }
+
+.slick-dots li button:before {
+    font-family: 'slick';
+    font-size: 13px !important;
+    line-height: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    content: '•';
+    text-align: center;
+    opacity: .25;
+    color: #3578fa !important;;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .slick-dots li button:hover, .slick-dots li button:focus {
+    outline: none;
+    color: #3578fa !important;;
+  }

@@ -56,7 +56,7 @@ export const ConfirmPassword = () => {
                         <InputField
                             variant="auth"
                             extra="mb-4"
-                            label="Confirm Password*"
+                            label="New Password*"
                             placeholder="Min. 8 characters"
                             id="password"
                             type="password"

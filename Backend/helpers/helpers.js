@@ -22,3 +22,16 @@ exports.uploadImage = async (image, next) => {
     });
   });
 }
+
+exports.randomPassword = () => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const passwordLength = Math.floor(Math.random() * 3) + 6; // Generates a length between 6 and 8
+
+  let password = '';
+  for (let i = 0; i < passwordLength; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    password += characters.charAt(randomIndex);
+  }
+ 
+  return password;
+}

@@ -11,6 +11,8 @@ import { useNavigate } from 'react-router';
 import { BackGroundLight } from "../components/minor-components/credentials-pages/BackgoundLight";
 import { CredentialsCard } from "../components/minor-components/credentials-pages/CredentialsCard";
 import { InputField } from "../components/minor-components/fields/InputField";
+import { restaurantLogin } from "../redux/Actions/RestaurantAction";
+import { useEffect } from "react";
 
 export const Login = () => {
     const navigate = useNavigate()
@@ -19,39 +21,26 @@ export const Login = () => {
     const loading = useSelector(
         (state) => state.ProgressBarReducer
     );
-    // const [email , setEmail] = useState('')
-    // const [password , setPassword] = useState('')
+
+    
+    // const { token, restaurant } = useSelector((state) => state.ProfileReducer);
     
     const [credentials, setcredentials] = useState({
         email: "",
         password: ""
-      });
-
-    const sendCreds=async()=>{
-        dispatch(selectProgressBarState(true))
-        // const res = await axiosInstance.post('/api/v1/admin/login', {
-            
-        //      email,password 
-            
-        //     })
-
+    });
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
         const { email, password } = credentials;
-        const res = await axiosInstance.post('/api/v1/admin/login', {email , password })
-        console.log(res.data + "  Res data" )
-        if (res.data.success ) {
-            dispatch(selectProgressBarState(false))
-            dispatch(adminLogin(res.data.token))
-            localStorage.setItem('token' , res.data.token)
-            console.log(localStorage + " Locals Data")
-            navigate('/')
-            alert.show('Logged in successfully')
-
-        }
-        else {
-            dispatch(selectProgressBarState(false))
-            alert.show(res.data.message)
-        }
+        dispatch(restaurantLogin(email, password, navigate, alert));
     }
+
+    // useEffect(() => {
+    //     console.log(token, 'tokenrestaurant')
+    //     console.log(restaurant ,'tokenrestaurant')
+    // }, [token, restaurant])
+
 
     const onChange = (e) => {
         setcredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -63,7 +52,7 @@ export const Login = () => {
                 <CredentialsCard>
                         <img className='w-36 mx-auto' src={logo} alt="logo" />
                         <h1 className="mb-8 text-md my-4 text-center text-2xl">SIGN IN</h1>
-                        <form onSubmit={sendCreds}>
+                        <form onSubmit={handleSubmit}>
                             <InputField
                                 label="Email*"
                                 type="email"
@@ -87,9 +76,6 @@ export const Login = () => {
                                 Login
                             </button>
                         </form>
-                        <div className="text-left text-sm text-grey-dark mt-4 my-4">
-                            Do not  have an account? <span className="text-blue-600"><Link to='/signup'>Sign Up</Link></span>
-                        </div>
                 </CredentialsCard>
             </BackGroundLight>
         ) :(

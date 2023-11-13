@@ -18,7 +18,7 @@ import { Radius } from "./components/major-components/Radius";
 import { Otp } from "./components/major-components/Otp";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { adminLogin } from "./redux/Actions/ProfileActions";
+import { adminLogin, setRestaurantData } from "./redux/Actions/ProfileActions";
 import { useJsApiLoader} from "@react-google-maps/api";
 import { SingleRestaurant } from "./components/major-components/SingleRestaurant";
 import { AllRestaurants } from "./components/major-components/AllRestaurants";
@@ -29,6 +29,7 @@ import { Layout } from "./components/minor-components/Layout";
 
 import "./components/fontawesomeIcons"
 import { ApplyNewRestaurant } from "./components/major-components/apply-new-restaurant/ApplyNewRestaurant";
+import { singleRestaurant } from "./redux/Actions/RestaurantAction";
 
 
 const places = ["places"]
@@ -37,19 +38,24 @@ function App() {
     googleMapsApiKey: 'AIzaSyASE7MqDo7TNZ_4fmORznk_JMBFm0d_pKY',
     libraries: places,
   });
-  const dispatch = useDispatch()
-  const token = useSelector(
+  const dispatch = useDispatch();
+  const {token} = useSelector(
     (state) => state.ProfileReducer
   );
+
+  
   useEffect(() => {
-    getToken()
-  })
-  const getToken = async () => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      dispatch(adminLogin(token))
+    const localStorageToken = localStorage.getItem('token'); 
+    const restaurantData = localStorage.getItem('restaurant');  
+    if (localStorageToken) {
+      dispatch(adminLogin(localStorageToken))
     }
-  }
+    if (restaurantData) {
+      dispatch(setRestaurantData(JSON.parse(restaurantData)));
+    }
+    dispatch(singleRestaurant());
+  }, [])
+
   return (
     <>
       <Router >
@@ -59,7 +65,7 @@ function App() {
               <Route path='/signup' element={<Signup />} />
               <Route path='/verification' element={<Otp />} />
               <Route path='/restaurant/apply' element={<ApplyNewRestaurant />} />
-              <Route path='/' element={localStorage.getItem('token') ? <SideAndNavbar /> : <Login />} >
+              <Route path='/' element={token ? <SideAndNavbar /> : <Login />} >
                 <Route index element={<DashboardHeroSection />} />
                 <Route path='/products' element={<Products />} />
                 <Route path='/orders' element={<Orders />} />
@@ -70,7 +76,7 @@ function App() {
                 {/* <Route path='/accounts' element={<Accounts />} />
                 <Route path='/storelocator' element={<StoreLocator />} /> */}
                 <Route path='/earnings' element={<WebsiteSetting />} />
-                <Route path='/appSettings' element={<AppSettings />} />
+                {/* <Route path='/appSettings' element={<AppSettings />} /> */}
                 <Route path='/aboutus' element={<AboutUs />} />
                 {/* <Route path='/all-restaurants' element={<AllRestaurants />} />
                 <Route path='/add-restaurant' element={<Radius />} />

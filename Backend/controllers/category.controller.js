@@ -5,42 +5,44 @@ const fs            = require('fs');
 const mongoose = require('mongoose');
 const Category = require('../models/Category');
 
-    exports.addCategory = async (req, res, next) => {
-        try {
-            console.log( req.query ,'query got here success fully')
-            console.log( req.files ,'files got here success fully')
-            const body = JSON.parse(req.query.values)
-            // const body = req.body;
-            if (!req.files) {
-                return res.status(200).json({
-                    success: false,
-                    data: null,
-                    message: 'Upload Image'
-                })
-            }
-            const uploadedPath = await uploadImage(req.files.image, next)
-            console.log(uploadedPath, 'path')
-            const Category = new Categories({
-                brand: body.brand,
-                category: body.category,
-                subCategory: body.subCategory,
-                type: body.type,
-                categoryPhoto: uploadedPath.photoPath
-            })
-            const addedCategory = await Category.save()
-            console.log(addedCategory)
-            if (!addedCategory) {
-                return next(new ErrorResponse('add category failed', 400))
-            }
+exports.addCategory = async (req, res, next) => {
+    try {
+        console.log( req.query ,'query got here success fully')
+        console.log( req.files ,'files got here success fully')
+        const restaurantId = req.user.data[1];
+        const body = JSON.parse(req.query.values)
+        // const body = req.body;
+        if (!req.files) {
             return res.status(200).json({
-                success: true,
-                data: addedCategory
+                success: false,
+                data: null,
+                message: 'Upload Image'
             })
         }
-        catch (err) {
-            return next(new ErrorResponse(err, 400))
+        const uploadedPath = await uploadImage(req.files.image, next)
+        console.log(uploadedPath, 'path')
+        const Category = new Categories({
+            restaurantId: restaurantId,
+            brand: body.brand,
+            category: body.category,
+            subCategory: body.subCategory,
+            type: body.type,
+            categoryPhoto: uploadedPath.photoPath
+        })
+        const addedCategory = await Category.save()
+        console.log(addedCategory)
+        if (!addedCategory) {
+            return next(new ErrorResponse('add category failed', 400))
         }
+        return res.status(200).json({
+            success: true,
+            data: addedCategory
+        })
     }
+    catch (err) {
+        return next(new ErrorResponse(err, 400))
+    }
+}
 exports.updateCategory = async (req, res, next) => {
     try {
         console.log( req.query ,'query got here success fully')
@@ -77,8 +79,27 @@ exports.updateCategory = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-
-
+exports.getAllRestaurantCategories = async (req, res, next) => {
+    try {
+        const Categories = await Category.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1])})
+        console.log(Categories)
+        if (Categories.length <= 0) {
+            return res.status(200).json({
+                success: true,
+                data: [],
+                message: 'No Category found'
+            })
+        }
+        return res.status(200).json({
+            success: true,
+            data: Categories,
+            message: "Categories found"
+        })
+    }
+    catch (err) {
+        return next(new ErrorResponse(err, 400))
+    }
+}
 exports.getAllCategories = async (req, res, next) => {
     try {
         const Categories = await Category.find({})
@@ -100,7 +121,6 @@ exports.getAllCategories = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-
 exports.getSingleBrand = async (req, res, next) => {
     console.log(req.query.brand , "Single Brand")
     try {
@@ -123,7 +143,6 @@ exports.getSingleBrand = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-
 exports.getAllProductsClientSide = async (req, res, next) => {
     try {
         const products = await Product.find({})
@@ -152,7 +171,6 @@ exports.getAllProductsClientSide = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-
 exports.deleteCategories = async (req, res, next) => {
     try {
         console.log(req.query , 'Ids')

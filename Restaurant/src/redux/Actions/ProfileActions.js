@@ -5,4 +5,11 @@ export const adminLogin = (selectedState) => {
       type: ACTION_TYPES.LOGIN ,
       payload: selectedState
     };
-  };
+};
+
+export const setRestaurantData = (data) => {
+    return {
+      type: ACTION_TYPES.SET_RESTAURANT_DATA ,
+      payload: data
+    };
+};

@@ -81,14 +81,14 @@ export const updateCategory = (values, formData, navigate, alert, setIsOpen) => 
     }
 }
 
-export const getCategories = () => {
+export const getRestaurantCategories = () => {
     return async (dispatch) => {
         dispatch(selectProgressBarState(true))
-        const res = await axiosInstance.get('/api/v1/category/getcategories')
+        const res = await axiosInstance.get('/api/v1/category/getrestaurantcategories')
         if (res.data.success === true) {
             dispatch(selectProgressBarState(false))
             dispatch({
-                type: ACTION_TYPES.GET_CATEGORIES,
+                type: ACTION_TYPES.GET_RESTAURANT_CATEGORIES,
                 payload: res.data.data
             })
         }
@@ -96,7 +96,7 @@ export const getCategories = () => {
             dispatch(selectProgressBarState(false))
             alert.show('No Category Found')
             dispatch({
-                type: ACTION_TYPES.GET_CATEGORIES,
+                type: ACTION_TYPES.GET_RESTAURANT_CATEGORIES,
                 payload: []
             })
         }

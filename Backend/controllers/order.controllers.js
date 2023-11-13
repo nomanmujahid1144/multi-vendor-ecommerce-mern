@@ -2,7 +2,7 @@ const ErrorResponse = require("../utils/errorResponse");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Cart = require("../models/Order");
-const Radius = require("../models/Radius");
+const Radius = require("../models/Restaurant");
 const Tax = require("../models/Tax");
 const DeliveryPerson = require("../models/DeliveryPerson");
 const dateTime = require('node-datetime');
@@ -21,9 +21,6 @@ exports.placeOrder = async (req, res, next) => {
 
   try {
 
-    const adminRadius = await Radius.find({});
-
-    console.log(adminRadius , 'adminRadius')
     //make order object
     const order = new Order({
       userId: req.user.data[1],
@@ -31,7 +28,7 @@ exports.placeOrder = async (req, res, next) => {
       details: req.body.details,
       "geometry.coordinates": req.body.geometry,
       totalProducts: req.body.totalProducts,
-      restaurantID: adminRadius[0]?._id,
+      restaurantId: req.body.restaurantId,
       subTotal: req.body.subTotal,
       deliveryType: req.body.deliveryType,
       paymentMethod: req.body.paymentMethod,
@@ -216,7 +213,7 @@ exports.getOrderById = async (req, res, next) => {
       _id: mongoose.Types.ObjectId(req.query.showDetails),
     })
       .populate("userId", { password: 0, __v: 0, createdAt: 0, updatedAt: 0 })
-      .populate("restaurantID", { products: 0, __v: 0, createdAt: 0, updatedAt: 0 })
+      .populate("restaurantId", { products: 0, __v: 0, createdAt: 0, updatedAt: 0 })
       .populate("details.productId");
     if (result.length < 1) {
       return next(new ErrorResponse("No Orders Found", 404));
@@ -564,6 +561,65 @@ exports.getAllOrdersAdmin = async (req, res, next) => {
       .populate("userId")
       .populate("details.productId")
 
+
+    let drivers = []
+
+    for (let i = 0; i < approvedOrder.length; i++) {
+      let comparingCoor = await DeliveryPerson.find({
+        $and: [
+          {
+            verified: true
+          },
+          {
+            blocked: false
+          }
+        ]
+      });
+      console.log(comparingCoor)
+      approvedOrder[i].drivers = comparingCoor
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "admin orders",
+      data: {
+        pendingOrder,
+        approvedOrder,
+        declinedOrder,
+        acceptedOrder,
+        completedOrder,
+      },
+    });
+  } catch (err) {
+    return next(new ErrorResponse(err, 400));
+  }
+};
+
+exports.getAllRestaurantOrders = async (req, res, next) => {
+  try {
+    console.log(req.user.data[1])
+    const pendingOrder = await Order.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1]),  status: 0 })
+      .populate("userId")
+      .populate("restaurantId")
+      .populate("details.productId");
+    const approvedOrder = await Order.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1]), status: 1 })
+      .populate("userId")
+      .populate("restaurantId")
+      .populate("details.productId");
+    const declinedOrder = await Order.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1]), status: 7 })
+      .populate("userId")
+      .populate("restaurantId")
+      .populate("details.productId");
+    const acceptedOrder = await Order.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1]), status: 2 })
+      .populate("userId")
+      .populate("restaurantId")
+      .populate("details.productId");
+    const completedOrder = await Order.find({restaurantId : mongoose.Types.ObjectId(req.user.data[1]), status: 5 })
+      .populate("userId")
+      .populate("restaurantId")
+      .populate("details.productId")
+
+    console.log(pendingOrder, 'pendingOrderpendingOrder')
 
     let drivers = []
 

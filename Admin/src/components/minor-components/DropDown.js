@@ -7,7 +7,8 @@ import { updateDriverStatus } from '../../redux/Actions/DriverActions'
 import { useAlert } from 'react-alert'
 import { axiosInstance } from '../../constants/axiosInstance'
 import { selectProgressBarState } from '../../redux/Actions/ProgressBarActions'
-export const Dropdown = ({ verified, blocked, id, orders, forceReload, setForceReload }) => {
+import { updateRestaurantStatusToApproved } from '../../redux/Actions/RestaurantAction'
+export const Dropdown = ({ isUnApprovedRestaurants, verified, blocked, id, orders, forceReload, setForceReload }) => {
     const dispatch = useDispatch()
     const alert = useAlert()
     const navigate = useNavigate()
@@ -46,6 +47,8 @@ export const Dropdown = ({ verified, blocked, id, orders, forceReload, setForceR
             alert.show('Failed to Deleted Order')
         }
     }
+
+
     return (
         <Menu className=''>
             {({ open }) => (
@@ -66,42 +69,59 @@ export const Dropdown = ({ verified, blocked, id, orders, forceReload, setForceR
                         <Menu.Items static className='absolute  top-18 left-[-45px] z-50 flex flex-col'>
                             {!orders ? (
                                 <>
-                                    <Menu.Item>
-                                        {({ active }) => (
-
-                                            <button
-                                                className={`py-2 px-4 no-underline border-1 ${verified ? 'hidden' : ''} ${active ? 'bg-myBg' : 'bg-gray-200'
-                                                    }`}
-                                                onClick={() => dispatch(updateDriverStatus({ checkVerify: true }, alert, navigate, id, dispatch))}
-                                            >
-                                                Verify Driver
-                                            </button>
-                                        )}
-                                    </Menu.Item>
-                                    <Menu.Item>
-                                        {({ active }) => (
-                                            <button
-                                                className={`py-2 px-4 no-underline  ${active ? 'bg-myBg' : 'bg-gray-200'
-                                                    }`}
-                                                onClick={(e) => dispatch(updateDriverStatus({ checkBlock: blocked ? false : true }, alert, navigate, id, dispatch))}
-                                            >
-                                                {!blocked ? <p>Block Driver</p> : <p>Un-block Driver</p>}
-
-                                            </button>
-                                        )}
-                                    </Menu.Item>
-                                    <Menu.Item>
-                                        {({ active }) => (
-                                            <button
-                                                className={`py-2 px-4 no-underline  ${active ? 'bg-myBg' : 'bg-gray-200'
-                                                    }`}
-                                                onClick={(e) => dispatch(updateDriverStatus({ checkBack: true }, alert, navigate, id, dispatch))}
-                                            >
-                                                {<p>Check Back</p>}
-
-                                            </button>
-                                        )}
-                                    </Menu.Item>
+                                    {isUnApprovedRestaurants ? (
+                                            <Menu.Item>
+                                                {({ active }) => (
+        
+                                                    <button
+                                                        className={`py-2 px-4 no-underline border-1 ${verified ? 'hidden' : ''} ${active ? 'bg-myBg' : 'bg-gray-200'
+                                                            }`}
+                                                        onClick={() => dispatch(updateRestaurantStatusToApproved(alert, navigate, id))}
+                                                    >
+                                                        Verify Restaurant
+                                                    </button>
+                                                )}
+                                            </Menu.Item>
+                                    ): (
+                                        <>
+                                            <Menu.Item>
+                                                {({ active }) => (
+        
+                                                    <button
+                                                        className={`py-2 px-4 no-underline border-1 ${verified ? 'hidden' : ''} ${active ? 'bg-myBg' : 'bg-gray-200'
+                                                            }`}
+                                                        onClick={() => dispatch(updateDriverStatus({ checkVerify: true }, alert, navigate, id, dispatch))}
+                                                    >
+                                                        Verify Driver
+                                                    </button>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <button
+                                                        className={`py-2 px-4 no-underline  ${active ? 'bg-myBg' : 'bg-gray-200'
+                                                            }`}
+                                                        onClick={(e) => dispatch(updateDriverStatus({ checkBlock: blocked ? false : true }, alert, navigate, id, dispatch))}
+                                                    >
+                                                        {!blocked ? <p>Block Driver</p> : <p>Un-block Driver</p>}
+        
+                                                    </button>
+                                                )}
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <button
+                                                        className={`py-2 px-4 no-underline  ${active ? 'bg-myBg' : 'bg-gray-200'
+                                                            }`}
+                                                        onClick={(e) => dispatch(updateDriverStatus({ checkBack: true }, alert, navigate, id, dispatch))}
+                                                    >
+                                                        {<p>Check Back</p>}
+        
+                                                    </button>
+                                                )}
+                                            </Menu.Item>
+                                        </>  
+                                    )}
                                 </>
                             ) : (
                                 <Menu.Item>

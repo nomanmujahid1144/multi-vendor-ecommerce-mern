@@ -102,6 +102,7 @@ exports.addToCart = async (req, res, next) => {
         } else {
             const cart = new Cart({
                 userId: req.user.data[1],
+                restaurantId: req.body.restaurantId,
                 details: obj,
             });
             const result = await cart.save();
@@ -274,13 +275,16 @@ exports.getCart = async (req, res, next) => {
     console.log(req.user, 'User Data')
 
     try {
-        const cart = await Cart.findOne({ userId: req.user.data[1] }).populate('userId').populate({
-            path: 'details',
-            populate: {
-                path: 'productId',
-                model: 'Product',
-            }
-        })
+        const cart = await Cart.findOne({ userId: req.user.data[1] })
+            .populate('userId')
+            .populate('restaurantId')
+            .populate({
+                path: 'details',
+                populate: {
+                    path: 'productId',
+                    model: 'Product',
+                }
+            })
 
         cart.totalProducts = cart.details.length;
 
@@ -324,8 +328,6 @@ exports.getCart = async (req, res, next) => {
     }
 }
 exports.getCartLength = async (req, res, next) => {
-    console.log(req.user, 'User Data')
-
     try {
         const cart = await Cart.findOne({ userId: req.user.data[1] }).populate('userId').populate({
             path: 'details',

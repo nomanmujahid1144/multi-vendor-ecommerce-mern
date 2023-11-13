@@ -2,7 +2,7 @@ import { ACTION_TYPES } from "../ActionTypes/ActionTypes";
 
 const initialState = {
     category: {},
-    categories: []
+    restaurantCategories: [],
 };
 
 const categoryReducer = (state = initialState, action) => {
@@ -19,16 +19,16 @@ const categoryReducer = (state = initialState, action) => {
                 category: action.payload,
             };
         }
-        case ACTION_TYPES.GET_CATEGORIES: {
+        case ACTION_TYPES.GET_RESTAURANT_CATEGORIES: {
             return {
                 ...state,
-                categories: action.payload,
+                restaurantCategories: action.payload,
             };
         }
         case ACTION_TYPES.DELETE_CATEGORIES: {
             return {
                 ...state,
-                categories: state.categories.filter(
+                restaurantCategories: state.restaurantCategories.filter(
                     (category) => !action.payload.includes(category._id)
                 ),
             };

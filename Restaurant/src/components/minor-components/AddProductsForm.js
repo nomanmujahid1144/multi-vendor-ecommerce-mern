@@ -22,20 +22,20 @@ const SignupSchema = Yup.object().shape({
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
-    type: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!'),
     category: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
+    subCategory: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!'),
+    type: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!'),
     description: Yup.string()
         .min(2, 'Too Short!')
         .max(10000, 'Too Long!')
         .required('Required'),
-    subCategory: Yup.string()
-        .min(2, 'Too Short!')
-        .max(50, 'Too Long!'),
     brand: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!'),
@@ -61,18 +61,18 @@ export const AddProductsForm = (props) => {
     const [brandType, setBrandType] = useState([])
     const [imgCheck, setImgCheck] = useState(false)
 
-    const { products } = useSelector(
+    const { restaurantProducts } = useSelector(
         (state) => state.productReducer
     );
     useEffect(() => {
         getCategory()
         if (!status) {
-            setEditItem(products.filter(
+            setEditItem(restaurantProducts?.filter(
                 (product) => product._id === global.editId
             ))
             loadData()
             let num = 1;
-            products.filter((product) => {
+            restaurantProducts.filter((product) => {
                 if (product._id === global.editId) {
                     num = product.extras.length
                 }
@@ -83,7 +83,7 @@ export const AddProductsForm = (props) => {
 
 
     const loadData = async () => {
-        let brandName = products.filter(
+        let brandName = restaurantProducts.filter(
             (product) => { return product.brand })
 
         setBrandField(brandName[0].brand)
@@ -168,6 +168,7 @@ export const AddProductsForm = (props) => {
                                         var formData = new FormData();
                                         if (!status) {
                                             if (imgCheck) {
+                                                console.log(values, 'IF IF')
                                                 let image = values.productPhoto
                                                 formData.append('image', image)
                                                 formData.append('count', moreExtras)
@@ -180,6 +181,7 @@ export const AddProductsForm = (props) => {
                                                 dispatch(updateProduct(values, formData, navigate, alert, props.modal, moreExtras))
                                             }
                                             else {
+                                                console.log(values, 'IF ELSE')
                                                 formData.append('count', moreExtras)
                                                 if (values.extras.length != 0) {
                                                     values.extras.forEach((extraPro, index) => {
@@ -191,6 +193,7 @@ export const AddProductsForm = (props) => {
                                             }
                                         }
                                         else {
+                                            console.log(values, 'ELSE')
                                             let image = values.productPhoto
                                             formData.append('image', image)
                                             formData.append('count', moreExtras)

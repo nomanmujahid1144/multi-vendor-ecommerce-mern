@@ -15,7 +15,6 @@ const {
   updateUserStatus,
   afterVerification,
   getAllUsers,
-  verifyLocation,
   disableAccount,
   sendContactMail,
   getDeactivateAccount,
@@ -50,7 +49,6 @@ router.get("/getallusers", checkAuth ,getAllUsers);
 router.post('/afterverification' , afterVerification)
 
 
-router.post('/verifylocation' , verifyLocation)
 router.post('/sendcontactmail' , sendContactMail)
 
 module.exports = router;

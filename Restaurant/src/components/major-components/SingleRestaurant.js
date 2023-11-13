@@ -1,5 +1,5 @@
 import { ActionsTable } from "../minor-components/ActionsTable"
-import { getProducts } from "../../redux/Actions/ProductActions"
+import { getProducts, getRestaurantProducts } from "../../redux/Actions/ProductActions"
 import { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import { useLocation } from "react-router-dom";
@@ -69,7 +69,7 @@ export const SingleRestaurant = (props) => {
     const [isUpdateOpen, setIsUpdateOpen] = useState(false)
 
 
-    const { products } = useSelector(
+    const { restaurantProducts } = useSelector(
         (state) => state.productReducer
     );
     const { orders } = useSelector(
@@ -82,7 +82,7 @@ export const SingleRestaurant = (props) => {
     useEffect(() => {
         if (token) {
             getSingleRadius()
-            dispatch(getProducts())
+            dispatch(getRestaurantProducts())
         }
     }, [token], [isOpen, isUpdateOpen])
 

@@ -51,27 +51,27 @@ export const ViewDetails = ({ showDetails }) => {
                                                                     <div className="grid md:grid-cols-2 text-sm">
                                                                         <div className="grid grid-cols-2">
                                                                             <div className="px-4 py-2 font-semibold">Restaurant Name</div>
-                                                                            <div className="px-4 py-2">{placesArr.restaurantID.shopName}</div>
+                                                                            <div className="px-4 py-2">{placesArr?.restaurantId?.restaurantName}</div>
                                                                         </div>
                                                                         <div className="grid grid-cols-2">
                                                                             <div className="px-4 py-2 font-semibold">User Name</div>
-                                                                            <div className="px-4 py-2">{placesArr.userId.firstName + " " + placesArr.userId.lastName}</div>
+                                                                            <div className="px-4 py-2">{placesArr?.userId?.fullName }</div>
                                                                         </div>
                                                                         <div className="grid grid-cols-2">
                                                                             <div className="px-4 py-2 font-semibold">Phone Number</div>
-                                                                            <div className="px-4 py-2">{placesArr.userId.phoneNumber}</div>
+                                                                            <div className="px-4 py-2">{placesArr?.userId?.phoneNumber}</div>
                                                                         </div>
                                                                         <div className="grid grid-cols-2">
                                                                             <div className="px-4 py-2 font-semibold">Email</div>
-                                                                            <div className="px-4 py-2">{placesArr.userId.email}</div>
+                                                                            <div className="px-4 py-2">{placesArr?.userId?.email}</div>
                                                                         </div>
                                                                         <div className="grid grid-cols-2">
                                                                             <div className="px-4 py-2 font-semibold">Shop Address</div>
-                                                                            <div className="px-4 py-2">{placesArr.restaurantID?.formattedAddress}</div>
+                                                                            <div className="px-4 py-2">{placesArr?.restaurantId?.formattedAddress}</div>
                                                                         </div>
                                                                         <div className="grid grid-cols-2">
                                                                             <div className="px-4 py-2 font-semibold">Destination Address</div>
-                                                                            <div className="px-4 py-2">{placesArr.userId.formattedAddress}</div>
+                                                                            <div className="px-4 py-2">{placesArr?.userId?.formattedAddress}</div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -104,9 +104,9 @@ export const ViewDetails = ({ showDetails }) => {
                                                                     <th scope="col" className="py-3 px-6">
                                                                         Total Price
                                                                     </th>
-                                                                    <th scope="col" className="py-3 px-6">
+                                                                    {/* <th scope="col" className="py-3 px-6">
                                                                         Special Instruction
-                                                                    </th>
+                                                                    </th> */}
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -119,17 +119,17 @@ export const ViewDetails = ({ showDetails }) => {
                                                                             {item.productId.name}
                                                                         </td>
                                                                         <td className="py-4 px-6">
-                                                                            R {item.productId.price}
+                                                                            $ {item.productId.price}
                                                                         </td>
                                                                         <td className="py-4 px-6">
                                                                             {item.quantity}
                                                                         </td>
                                                                         <td className="py-4 px-6">
-                                                                            R {item.productTotal}
+                                                                        $ {item.productTotal}
                                                                         </td>
-                                                                        <td className="py-4 px-6">
+                                                                        {/* <td className="py-4 px-6">
                                                                             {item.specialInstructions}
-                                                                        </td>
+                                                                        </td> */}
                                                                     </tr>
 
                                                                 ))}
@@ -141,9 +141,9 @@ export const ViewDetails = ({ showDetails }) => {
                                             </div>
                                         </div>
                                         <div className="mt-3 text-right p-7">
-                                            <h4>Sub Total :R {placesArr.subTotal}</h4>
-                                            <h4>Delivery Cost :R {placesArr.deliveryCost ? placesArr.deliveryCost : 0}</h4>
-                                            <h2>Grand Total :R {placesArr.grandTotalPrice}</h2>
+                                            <h4>Sub Total :$ {placesArr.subTotal}</h4>
+                                            <h4>Delivery Cost :$ {placesArr.deliveryCost ? placesArr.deliveryCost : 0}</h4>
+                                            <h2>Grand Total :$ {placesArr.totalPrice}</h2>
                                         </div>
 
                                     </div>

@@ -1,6 +1,6 @@
 import { ActionsTable } from "../minor-components/ActionsTable"
 import { useEffect, useState } from "react"
-import { getCategories } from "../../redux/Actions/CategoryActions"
+import { getRestaurantCategories } from "../../redux/Actions/CategoryActions"
 import { useSelector, useDispatch } from "react-redux"
 import { Modal } from "../minor-components/Modal"
 import { AddCategoriesForm } from "../minor-components/AddCategoriesForm"
@@ -19,7 +19,7 @@ export const Categories = () => {
     const [isUpdateOpen, setIsUpdateOpen] = useState(false)
 
 
-    const { categories } = useSelector(
+    const { restaurantCategories } = useSelector(
         (state) => state.categoryReducer
     );
     const loading = useSelector(
@@ -27,7 +27,7 @@ export const Categories = () => {
     );
 
     useEffect(() => {
-        dispatch(getCategories())
+        dispatch(getRestaurantCategories())
     }, [isOpen, isUpdateOpen])
 
     return (
@@ -47,11 +47,11 @@ export const Categories = () => {
                         <AddCategoriesForm modal={setIsOpen} isAdd={true} />
                     </Modal>
                     {
-                        categories.length === 0 ? (
+                        restaurantCategories.length === 0 ? (
                             <div className="flex justify-center items-center py-8 text-lg h-screen">No Category Found</div>
                         )
                             : (
-                                <ActionsTable isOpen={isUpdateOpen} tableColumnsReal={tableColumnsReal} checkBox={true} isCategory={true} modal={setIsUpdateOpen} key={parseInt(Math.random() * 10000)} tableDataReal={categories} />
+                                <ActionsTable isOpen={isUpdateOpen} tableColumnsReal={tableColumnsReal} checkBox={true} isCategory={true} modal={setIsUpdateOpen} key={parseInt(Math.random() * 10000)} tableDataReal={restaurantCategories} />
                             )
                     }
                 </div>

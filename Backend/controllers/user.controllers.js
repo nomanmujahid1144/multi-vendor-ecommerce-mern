@@ -2,7 +2,7 @@ const ErrorResponse = require("../utils/errorResponse");
 const User = require("../models/User");
 const { uploadImage } = require('../helpers/helpers')
 const { sendEmail } = require('../helpers/SendEmail')
-const Radius = require("../models/Radius");
+const Restaurant = require("../models/Restaurant");
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const jsonwebtoken = require("jsonwebtoken");
@@ -30,7 +30,10 @@ exports.userSignup = async (req, res, next) => {
     let userInfo = await User.findOne({ email: req.body.email });
     if (userInfo) {
       success = false
-      return res.status(400).json({ error: "Account with this email already exixts" });
+      return res.status(400).json({
+        success: true,
+        message: "Email Already Registered Please try another one."
+      });
     }
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
@@ -269,16 +272,16 @@ exports.forgetPassword = async (req, res, next) => {
   try {
 
     const email = req.body.email;
-    const user = await User.findOne({ 'email': email })
-    console.log(user, 'user')
-    const userId = user.id;
+    const user = await User.findOne({ 'email': email });
+
     if (!user) {
       return res.status(403).json({
         success: false,
-        message: "Not Send ",
+        message: "Please enter correct email",
         data: null,
       });
     } else {
+      const userId = user.id;
       const oauth2Client = new OAuth2(
         process.env.CLIENT_ID, // ClientID
         process.env.CLIENT_SECRET, // Client Secret
@@ -541,79 +544,6 @@ exports.updateUserStatus = async (req, res, next) => {
       message: "Updated successfully",
       success: true,
     });
-  } catch (err) {
-    return next(new ErrorResponse(err, 400));
-  }
-};
-
-
-
-exports.verifyLocation = async (req, res, next) => {
-  console.log(req.body, "order Body")
-
-  try {
-    const adminRadius = await Radius.find({ formattedAddress: req.body.formattedAddress });
-    console.log(adminRadius, 'adminRadius')
-    if (adminRadius.length < 1) {
-      return res.status(403).json({
-        success: false,
-        message: "Service Not Available in Specified Area",
-        data: null,
-      });
-    }
-
-    //checking if User is with in location limits 
-    let comparingCoor = await Radius.find({
-      "geometry.coordinates": {
-        $nearSphere: {
-          $geometry: {
-            type: "Point",
-            coordinates: [
-              parseFloat(req.body.geometry.coordinates[0]),
-              parseFloat(req.body.geometry.coordinates[1]),
-            ],
-          },
-          $maxDistance: parseInt(adminRadius[0].radius),
-        },
-      },
-    });
-
-    console.log(comparingCoor, 'comparingCoor')
-
-    if (comparingCoor.length < 1) {
-      console.log('i n here')
-      return res.status(403).json({
-        success: false,
-        message: "Service Not Available in Specified Area ",
-        data: null,
-      });
-    } else {
-
-      //find distance from shop to delivery point
-      const totalDistance = await Radius.aggregate([
-        {
-          $geoNear: {
-            near: {
-              type: "Point", coordinates: [
-                parseFloat(req.body.geometry.coordinates[0]),
-                parseFloat(req.body.geometry.coordinates[1]),
-              ]
-            },
-            distanceField: "dist.calculated",
-            spherical: true
-          }
-        }
-      ])
-
-      console.log(totalDistance, 'Distance')
-
-      return res.status(200).json({
-        success: true,
-        message: "haye",
-        data: totalDistance[0],
-      });
-    }
-
   } catch (err) {
     return next(new ErrorResponse(err, 400));
   }

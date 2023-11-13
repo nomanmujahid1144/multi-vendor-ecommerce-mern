@@ -5,7 +5,7 @@ import { selectProgressBarState } from './ProgressBarActions';
 export const addProduct = (values, formData, navigate, alert, setIsOpen) => {
 
     return async (dispatch) => {
-
+        console.log(values, 'ELSE VALUES')
         const res = await axiosInstance.post('/api/v1/product/addproduct', formData, {
             params: {
                 values: values,
@@ -86,14 +86,14 @@ export const updateProduct = (values, formData, navigate, alert, setIsOpen) => {
     }
 }
 
-export const getProducts = () => {
+export const getRestaurantProducts = () => {
     return async (dispatch) => {
         dispatch(selectProgressBarState(true))
-        const res = await axiosInstance.get('/api/v1/product/getproducts')
+        const res = await axiosInstance.get('/api/v1/product/get-restaurant-products')
         if (res.data.success === true) {
             dispatch(selectProgressBarState(false))
             dispatch({
-                type: ACTION_TYPES.GET_PRODUCTS,
+                type: ACTION_TYPES.GET_RESTAURANT_PRODUCTS,
                 payload: res.data.data
             })
         }
@@ -101,7 +101,7 @@ export const getProducts = () => {
             dispatch(selectProgressBarState(false))
             alert.show('No Products Found')
             dispatch({
-                type: ACTION_TYPES.GET_PRODUCTS,
+                type: ACTION_TYPES.GET_RESTAURANT_PRODUCTS,
                 payload: []
             })
         }

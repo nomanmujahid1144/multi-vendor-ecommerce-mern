@@ -17,8 +17,14 @@ const {
     getAllOrdersAdmin,
     updateOrderStatusAdmin,
     updateManualOrderStatusAdmin,
-    getOrderByOrderId
-} = require('../controllers/order.controllers')
+    getOrderByOrderId,
+
+
+    // ALL Restaurant Panel Calls
+    getAllRestaurantOrders,
+} = require('../controllers/order.controllers');
+
+
 const {
     addToCart,
     decreaseExtrasQuantity,
@@ -27,7 +33,9 @@ const {
     getCartLength,
     deleteCart
 
-} = require('../controllers/cart.controllers')
+} = require('../controllers/cart.controllers');
+
+
 const checkAuth = require('../middleware/check-auth')
 
 router.post('/placeorder', checkAuth, placeOrder)
@@ -35,11 +43,17 @@ router.post('/placeorder', checkAuth, placeOrder)
 router.post('/placemanualorder', placeManualOrder)
 
 router.get('/getallordersbyid', checkAuth, getAllOrdersById)
-router.get('/getOrderById', getOrderById)
 router.get('/getallordersbyposition', getAllOrdersByPosition)
 router.get('/getallordersadmin', checkAuth, getAllOrdersAdmin)
 router.get('/getallorders', getAllOrders)
 router.get('/getneworders', getNewOrders)
+
+// ALL ROUTES FOR RESTRARANT PANEL
+router.get('/get-all-restaurant-orders', checkAuth, getAllRestaurantOrders)
+router.get('/getOrderById', getOrderById)
+
+
+
 
 router.patch('/updateorderstatus', updateOrderStatus)
 router.patch('/updateorderstatusadmin', updateOrderStatusAdmin)

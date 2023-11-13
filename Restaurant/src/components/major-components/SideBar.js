@@ -15,13 +15,16 @@ import tracking from '../../assets/tracking.svg';
 import account from '../../assets/account.svg';
 import salesPromotion from '../../assets/sales-promotion.svg';
 import logout from '../../assets/logout.svg';
+import { baseURL } from "../../constants/baseURL";
 
 const SideBar = () => {
     const navigate = useNavigate();
     const [openChildIndex, setOpenChildIndex] = useState(-1);
     const [restaurantArray, setRestaurantArray] = useState([]);
 
-    const token = useSelector((state) => state.ProfileReducer);
+    const {token, restaurant} = useSelector(
+        (state) => state.ProfileReducer
+    );
 
     React.useEffect(() => {
         if (token) {
@@ -89,12 +92,12 @@ const SideBar = () => {
             svg: product,
 
         },
-        {
-            title: 'My Restaurant',
-            path: '/restaurant/view',
-            // childrens: restaurantArray,
-            svg: restaurant
-        },
+        // {
+        //     title: 'My Restaurant',
+        //     path: '/restaurant/view',
+        //     // childrens: restaurantArray,
+        //     svg: restaurant
+        // },
         {
             title: 'Orders',
             path: '/orders',
@@ -111,16 +114,16 @@ const SideBar = () => {
             path: '/earnings',
             svg: salesPromotion
         },
-        {
-            title: 'App Setting',
-            path: '/appSettings',
-            svg: account
-        },
-        {
-            title: 'About Us',
-            path: '/aboutus',
-            svg: account
-        },
+        // {
+        //     title: 'App Setting',
+        //     path: '/appSettings',
+        //     svg: account
+        // },
+        // {
+        //     title: 'About Us',
+        //     path: '/aboutus',
+        //     svg: account
+        // },
         {
             title: 'Track Order',
             path: '/trackorder',
@@ -151,7 +154,7 @@ const SideBar = () => {
         <>
         <div style={{ scrollbarWidth: 'none' }} className='shadow-xl bg-white fixed overflow-y-auto scroll-thin top-0 h-full left-0 w-[18%] md:hidden'>
             <div className='h-24 bg-gray-50 flex justify-center items-center p-0 m-0'>
-                <img className='mx-auto mt-0 w-[5.5rem]' src={logo2} alt='logo' />
+                <img className='mx-auto mt-0 w-[5.5rem]' src={restaurant? baseURL + restaurant.restaurantLogo : logo2} alt='logo' />
             </div>
             <ul className='flex flex-col'>
                 {sidebarData.map((item, index) => (

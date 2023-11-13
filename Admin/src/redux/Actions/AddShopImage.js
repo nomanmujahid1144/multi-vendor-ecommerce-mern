@@ -39,7 +39,6 @@ export const addShopImage = (values , formData, navigate, alert) => {
     }
 }
 
-
 export const updateProduct = (values, formData, navigate, alert, setIsOpen) => {
     return async (dispatch) => {
         dispatch(selectProgressBarState(true))
