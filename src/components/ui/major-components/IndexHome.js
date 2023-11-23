@@ -59,6 +59,7 @@ export const IndexHome = () => {
                                     />
                                 ))}
                             </div>
+                            <HomeFilters />
                         </>)
                         : 
                         <SectionHeading

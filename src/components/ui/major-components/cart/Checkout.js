@@ -55,6 +55,7 @@ export const Checkout = () => {
       // paymentMethod: paymentMethod,
       // geometry: [coordinates[0], coordinates[1]]
     }
+
     dispatch(orderPlace(order, navigate, alert)).then(() => {
       dispatch(deleteCart()).then(() => {
         dispatch(getCartLength());
