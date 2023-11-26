@@ -51,7 +51,7 @@ const restaurant = new mongoose.Schema({
         type: String,
         default: ''
     },
-    zone: {
+    diningMode: {
         type: String,
         default: ''
     },

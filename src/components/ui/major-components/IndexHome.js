@@ -8,41 +8,43 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { getRestaurantsByUserLocation } from "../../../redux/Actions/RestaurantAction";
 import { useAlert } from "react-alert";
+import {HomeFilters} from "../minor-components/filter/HomeFilter";
 
 export const IndexHome = () => {
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const alert = useAlert();
-    const location = useLocation();
+    // const dispatch = useDispatch();
+    // const navigate = useNavigate();
+    // const alert = useAlert();
+    // const location = useLocation();
 
-    const [locationFromIndexPage, setLocationFromIndexPage] = useState();
+    // const [locationFromIndexPage, setLocationFromIndexPage] = useState();
 
-    const { restaurantsByUserLocation } = useSelector(
-        (state) => state.restaurantReducer
-    );
+    // const { restaurantsByUserLocation } = useSelector(
+    //     (state) => state.restaurantReducer
+    // );
 
-    useEffect(() => {
-        const Geomatery = localStorage.getItem('geomatery');
-        if (Geomatery) {
-            if (Object.keys(JSON.parse(Geomatery)).length) {
-                setLocationFromIndexPage(JSON.parse(Geomatery))
-            }
-        }
-    }, [])
+    // useEffect(() => {
+    //     const Geomatery = localStorage.getItem('geomatery');
+    //     if (Geomatery) {
+    //         if (Object.keys(JSON.parse(Geomatery)).length) {
+    //             setLocationFromIndexPage(JSON.parse(Geomatery))
+    //         }
+    //     }
+    // }, [])
 
-    useEffect(() => {
-        if (locationFromIndexPage) {
-            dispatch(getRestaurantsByUserLocation(locationFromIndexPage, navigate, alert))
-        }
-    }, [locationFromIndexPage])
+    // useEffect(() => {
+    //     if (locationFromIndexPage) {
+    //         dispatch(getRestaurantsByUserLocation(locationFromIndexPage, navigate, alert))
+    //     }
+    // }, [locationFromIndexPage])
 
     return (
         <>
             <HomeScreenHeader />
-            <div className="MuiContainer-root MuiContainer-maxWidthLg mui-style-159cdno">
+            {/* <div className="MuiContainer-root MuiContainer-maxWidthLg mui-style-159cdno"> */}
+            <div className="px-10">
                 <main className="pos-app w-full pb-6 transition-all duration-[.25s]" >
-                    {restaurantsByUserLocation.length > 0 ?
+                    {/* {restaurantsByUserLocation.length > 0 ?
                         (<>
                             <SectionHeading
                                 heading="Restaurants"
@@ -58,14 +60,14 @@ export const IndexHome = () => {
                                         restaurantTimeStamp={restaurant.timeStamp}
                                     />
                                 ))}
-                            </div>
+                            </div> */}
                             <HomeFilters />
-                        </>)
+                        {/* </>)
                         : 
                         <SectionHeading
                             heading="No Restaurant Yet!"
                         />
-                    }
+                    } */}
                 </main>
             </div>
         </>

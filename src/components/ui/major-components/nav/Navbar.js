@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react'
 import { Dialog } from '@headlessui/react'
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Disclosure, Menu, Transition, Switch  } from '@headlessui/react';
 import { Fragment } from 'react';
 import logo from '../../../../assets/logo/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getCartLength } from '../../../../redux/Actions/CartAction';
+import DeliveryPickupToggle from '../../minor-components/delivery-pickup-toggle/Toggle';
 
 const navigation = [
     { name: 'Home', href: '/home', current: true },
@@ -96,12 +97,8 @@ export const Navbar = () => {
                                                 <p className='location-inner-typo-address !text-primaryTextColor'>{formattedAddress}</p>
                                                 <FontAwesomeIcon className='icons-style !h-3' icon="fa-solid fa-chevron-down" />
                                             </div>
-                                        :null}
-                                        {/* <div className='location-change-container location-position'>
-                                            <div data-simplebar="init" className='location-inner-div'>
-
-                                            </div>
-                                        </div> */}
+                                        : null}
+                                        <DeliveryPickupToggle />
                                         {navigation.map((item) => (
                                             <Fragment key={item.name}>
                                                 {item.dropdownItems ? (

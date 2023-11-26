@@ -41,9 +41,14 @@ function SelectionField(props) {
         }`}
       >
         {options.map((option, index) => (
+          <>
+          <option hidden selected>
+            Select Option
+          </option>
           <option key={index} value={option.value}>
             {option.label}
           </option>
+          </>
         ))}
       </select>
     </div>

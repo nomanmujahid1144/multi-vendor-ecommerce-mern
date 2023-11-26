@@ -48,7 +48,7 @@ export const RestaurantRegistration = () => {
         timeStamp: '',
 
         cuisine: '',
-        zone: '',
+        diningMode: '',
 
 
         owner_FirstName : '',
@@ -71,20 +71,17 @@ export const RestaurantRegistration = () => {
         credentials.owner_PhoneNumber = value;
         
         var formData = new FormData();
-        formData.append('restaurantLogo', restaurantLogo)
-        formData.append('restaurantCoverImage', selectCoverImage)
-        console.log('Çredentials', credentials);
-        console.log('Çredentials', value);
-        console.log('Çredentials', formattedAddress);
-        console.log('Çredentials', selected);
+        formData.append('restaurantLogo', restaurantLogo);
+        formData.append('restaurantCoverImage', selectCoverImage);
+
         let obj = {
             geometry: { coordinates: [selected.lat, selected.lng] },
             formattedAddress: formattedAddress,
-        }
-        console.log(obj)
+        };
+
         credentials.geometry = obj.geometry
         credentials.formattedAddress = obj.formattedAddress
-        console.log(credentials, 'credentials')
+
         dispatch(addRestaurant(credentials, formData, navigate, alert));
     //   const { email, password } = credentials;
     };
@@ -104,7 +101,7 @@ export const RestaurantRegistration = () => {
             timeStamp: '',
 
             cuisine: '',
-            zone: '',
+            diningMode: '',
 
 
             owner_FirstName: '',
@@ -332,20 +329,16 @@ export const RestaurantRegistration = () => {
                                     <div className="form-group">
                                         <SelectionField
                                             options={[
-                                                { value: "bengali", label: "Bengali" },
-                                                { value: "chinese", label: "Chinese" },
-                                                { value: "japanese", label: "Japanese" },
-                                                { value: "italian", label: "Italian" },
-                                                { value: "indian", label: "Indian" },
-                                                { value: "fast food", label: "Fast Food" },
-                                                { value: "sea food", label: "Sea Food" },
+                                                { value: "delivery", label: "Delivery" },
+                                                { value: "pickup", label: "Pick Up" },
+                                                { value: "both", label: "Both" },
                                             ]}
                                             variant="auth"
                                             extra=""
-                                            label="Zone*"
-                                            placeholder="Select Zone*"
-                                            id="zone"
-                                            value={credentials.zone}
+                                            label="Delivery Mode*"
+                                            placeholder="Select Delivery Mode*"
+                                            id="diningMode"
+                                            value={credentials.diningMode}
                                             onChange={onChange}
                                         />
                                     </div>

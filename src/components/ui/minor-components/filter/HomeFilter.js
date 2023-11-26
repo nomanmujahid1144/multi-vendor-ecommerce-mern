@@ -1,7 +1,12 @@
-import { Fragment, useState } from 'react'
-import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
+import { Fragment, useEffect, useState } from 'react'
+import { Dialog, Disclosure, Transition } from '@headlessui/react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { PopularRestaurant } from '../../major-components/restaurants/Restaurants'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useAlert } from 'react-alert'
+import { baseURL } from '../../../../constants/baseURL'
+import { getRestaurantsByUserLocation } from '../../../../redux/Actions/RestaurantAction'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -11,56 +16,74 @@ const sortOptions = [
   { name: 'Price: High to Low', href: '#', current: false },
 ]
 const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
+  { name: 'Top Rated', href: '#' },
+  { name: 'Delivery Time', href: '#' },
+  { name: 'Most Popular', href: '#' },
+  { name: 'Best Rating', href: '#' }
 ]
 const filters = [
   {
-    id: 'color',
-    name: 'Color',
+    id: 'Sort',
+    name: 'Sort',
+    opt: 'options',
     options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
+      { value: 'Newest', label: 'newest', checked: false },
+      { value: 'Price: Low to High', label: 'price-low-to-high', checked: false },
+      { value: 'Price: High to Low', label: 'price-high-to-low', checked: true }
     ],
   },
   {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
-    ],
+    id: 'Price',
+    name: 'Price',
+    opt: 'price-tabs'
   },
   {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
-    ],
+    id: 'Delivery Fee',
+    name: 'Delivery Fee',
+    opt: 'delivery-fee'
   },
-]
+];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+export const HomeFilters = () => {
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-export default function HomeFilters() {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const alert = useAlert();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const diningMode = params.get('diningMode');
+
+  const [locationFromIndexPage, setLocationFromIndexPage] = useState();
+
+  const { restaurantsByUserLocation } = useSelector(
+      (state) => state.restaurantReducer
+  );
+
+  useEffect(() => {
+    if (diningMode === 'DELIVERY') {
+      // Do something for DELIVERY mode
+      console.log('DELIVERY')
+    } else if (diningMode === 'PICKUP') {
+      // Do something for PICKUP mode
+      console.log('PICKUP')
+    }
+  }, [diningMode])
+
+  useEffect(() => {
+    const Geomatery = localStorage.getItem('geomatery');
+    if (Geomatery) {
+      if (Object.keys(JSON.parse(Geomatery)).length) {
+        setLocationFromIndexPage(JSON.parse(Geomatery))
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (locationFromIndexPage) {
+      dispatch(getRestaurantsByUserLocation(locationFromIndexPage, navigate, alert))
+    }
+  }, [locationFromIndexPage]);
 
   return (
     <div className="bg-white">
@@ -99,7 +122,7 @@ export default function HomeFilters() {
                       onClick={() => setMobileFiltersOpen(false)}
                     >
                       <span className="sr-only">Close menu</span>
-                      <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                        <FontAwesomeIcon className="h-6 w-6" aria-hidden="true" icon="fa-solid fa-xmark" />
                     </button>
                   </div>
 
@@ -107,17 +130,33 @@ export default function HomeFilters() {
                   <form className="mt-4 border-t border-gray-200">
                     <h3 className="sr-only">Categories</h3>
                     <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                      {subCategories.map((category) => (
+                      {subCategories.map((category, optionIdx) => (
                         <li key={category.name}>
-                          <a href={category.href} className="block px-2 py-3">
+                          {/* <a href={category.href} className="block px-2 py-3">
                             {category.name}
-                          </a>
+                          </a> */}
+                          <div key={category.name} className="items-center block px-2 py-3">
+                            <input
+                              id={`filter-mobile-${category.name}-${optionIdx}`}
+                              name={`${category.name}[]`}
+                              defaultValue={false}
+                              type="checkbox"
+                              defaultChecked={false}
+                              className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <label
+                              htmlFor={`filter-mobile-${category.name}-${optionIdx}`}
+                              className="ml-3 min-w-0 flex-1 text-gray-500"
+                            >
+                              {category.name}
+                            </label>
+                          </div>
                         </li>
                       ))}
                     </ul>
 
                     {filters.map((section) => (
-                      <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
+                      <Disclosure as="div"  defaultOpen={true} key={section.id} className=" px-4 py-6">
                         {({ open }) => (
                           <>
                             <h3 className="-mx-2 -my-3 flow-root">
@@ -125,19 +164,20 @@ export default function HomeFilters() {
                                 <span className="font-medium text-gray-900">{section.name}</span>
                                 <span className="ml-6 flex items-center">
                                   {open ? (
-                                    <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                                    <FontAwesomeIcon icon="fa-solid fa-minus" className="h-5 w-5" aria-hidden="true" />
                                   ) : (
-                                    <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                                    <FontAwesomeIcon icon="fa-solid fa-plus" className="h-5 w-5" aria-hidden="true" />
                                   )}
                                 </span>
                               </Disclosure.Button>
                             </h3>
                             <Disclosure.Panel className="pt-6">
                               <div className="space-y-6">
+                              {section.opt === 'options' ? <>
                                 {section.options.map((option, optionIdx) => (
                                   <div key={option.value} className="flex items-center">
                                     <input
-                                      id={`filter-mobile-${section.id}-${optionIdx}`}
+                                      id={`filter-${section.id}-${optionIdx}`}
                                       name={`${section.id}[]`}
                                       defaultValue={option.value}
                                       type="checkbox"
@@ -145,13 +185,40 @@ export default function HomeFilters() {
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                     />
                                     <label
-                                      htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                      className="ml-3 min-w-0 flex-1 text-gray-500"
+                                      htmlFor={`filter-${section.id}-${optionIdx}`}
+                                      className="ml-3 text-sm text-gray-600"
                                     >
                                       {option.label}
                                     </label>
                                   </div>
                                 ))}
+                              </>
+                              : <>
+                                    {section.opt === 'price-tabs' ? 
+                                      <div className='flex flex-wrap gap-3'>
+                                        <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$</button>  
+                                        <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$</button>  
+                                        <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$$</button>  
+                                        <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$$$</button>  
+                                      </div>  
+                                  : <>
+                                      {section.opt === 'delivery-fee' ?
+                                          <div className='ranger-filter-container'>
+                                            <div className='ranger-filter-inner'>
+                                              <div className='ranger-filter-wrapper'>
+                                                <div className='ranger-filter-inner-wrapper'>
+                                                  <div className='ranger-filter-inner-one'>$2</div>
+                                                  <div className='ranger-filter-inner-one'>$4</div>
+                                                  <div className='ranger-filter-inner-one'>$6</div>
+                                                  <div className='ranger-filter-inner-one'>$10</div>
+                                                </div>
+                                                <input className='range-filter-input' max="3" type="range" value="2" />
+                                              </div>
+                                            </div>
+                                          </div>
+                                      : null}
+                                  </>}
+                                </>}
                               </div>
                             </Disclosure.Panel>
                           </>
@@ -165,19 +232,15 @@ export default function HomeFilters() {
           </Dialog>
         </Transition.Root>
 
-        <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
-
+        <main className="mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-baseline justify-between  pb-6 pt-24">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">All stores</h1>
             <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
+              {/* <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                     Sort
-                    <ChevronDownIcon
-                      className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                      aria-hidden="true"
-                    />
+                    <FontAwesomeIcon className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" icon="fa-solid fa-chevron-down" />
                   </Menu.Button>
                 </div>
 
@@ -211,19 +274,19 @@ export default function HomeFilters() {
                     </div>
                   </Menu.Items>
                 </Transition>
-              </Menu>
+              </Menu> */}
 
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+              {/* <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
                 <span className="sr-only">View grid</span>
-                <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-              </button>
+                <FontAwesomeIcon className="h-5 w-5" aria-hidden="true"  icon="fa-solid fa-border-all" />
+              </button> */}
               <button
                 type="button"
                 className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
                 onClick={() => setMobileFiltersOpen(true)}
               >
                 <span className="sr-only">Filters</span>
-                <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+                <FontAwesomeIcon icon="fa-solid fa-filter" className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -238,31 +301,49 @@ export default function HomeFilters() {
               <form className="hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
                 <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                  {subCategories.map((category) => (
+                  {subCategories.map((category, optionIdx) => (
                     <li key={category.name}>
-                      <a href={category.href}>{category.name}</a>
+                      {/* <a href={category.href}>{category.name}</a> */}
+                      
+                      <div key={category.name} className="">
+                            <input
+                              id={`filter-mobile-${category.name}-${optionIdx}`}
+                              name={`${category.name}[]`}
+                              defaultValue={false}
+                              type="radio"
+                              defaultChecked={false}
+                              className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <label
+                              htmlFor={`filter-mobile-${category.name}-${optionIdx}`}
+                              className="ml-3 min-w-0 flex-1 text-gray-500"
+                            >
+                              {category.name}
+                            </label>
+                          </div>
                     </li>
                   ))}
                 </ul>
 
                 {filters.map((section) => (
-                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                  <Disclosure as="div" key={section.id} defaultOpen={true} className="border-b border-gray-200 py-6">
                     {({ open }) => (
                       <>
                         <h3 className="-my-3 flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                             <span className="font-medium text-gray-900">{section.name}</span>
                             <span className="ml-6 flex items-center">
-                              {open ? (
-                                <MinusIcon className="h-5 w-5" aria-hidden="true" />
+                            {open ? (
+                                <FontAwesomeIcon icon="fa-solid fa-minus" className="h-5 w-5" aria-hidden="true" />
                               ) : (
-                                <PlusIcon className="h-5 w-5" aria-hidden="true" />
+                                <FontAwesomeIcon icon="fa-solid fa-plus" className="h-5 w-5" aria-hidden="true" />
                               )}
                             </span>
                           </Disclosure.Button>
                         </h3>
                         <Disclosure.Panel className="pt-6">
                           <div className="space-y-4">
+                          {section.opt === 'options' ? <>
                             {section.options.map((option, optionIdx) => (
                               <div key={option.value} className="flex items-center">
                                 <input
@@ -281,6 +362,33 @@ export default function HomeFilters() {
                                 </label>
                               </div>
                             ))}
+                          </>
+                          : <>
+                                {section.opt === 'price-tabs' ? 
+                                  <div className='flex flex-wrap gap-3'>
+                                    <button className='bg-bgOrangeColor hover:bg-bgOrangeColorHover text-textColorWhite px-3 py-2 rounded-full'>$</button>  
+                                    <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$</button>  
+                                    <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$$</button>  
+                                    <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$$$</button>  
+                                  </div>  
+                              : <>
+                                  {section.opt === 'delivery-fee' ?
+                                      <div className='ranger-filter-container'>
+                                        <div className='ranger-filter-inner'>
+                                          <div className='ranger-filter-wrapper'>
+                                            <div className='ranger-filter-inner-wrapper'>
+                                              <div className='ranger-filter-inner-one'>$2</div>
+                                              <div className='ranger-filter-inner-one'>$4</div>
+                                              <div className='ranger-filter-inner-one'>$6</div>
+                                              <div className='ranger-filter-inner-one'>$10</div>
+                                            </div>
+                                            <input className='range-filter-input' max="3" type="range" value="2" />
+                                          </div>
+                                        </div>
+                                      </div>
+                                  : null}
+                              </>}
+                            </>}
                           </div>
                         </Disclosure.Panel>
                       </>
@@ -290,7 +398,21 @@ export default function HomeFilters() {
               </form>
 
               {/* Product grid */}
-              <div className="lg:col-span-3">{/* Your content */}</div>
+              <div className="lg:col-span-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:grid-cols-3">
+                    {restaurantsByUserLocation?.map((restaurant) => (
+                        <PopularRestaurant
+                            goToSingleRestaurant={`/restaurant/${restaurant._id}`}
+                            restaurantName={restaurant.restaurantName}
+                            restaurantCoverImage={baseURL + restaurant.restaurantCoverImage}
+                            restaurantMinDeliveryTime={restaurant.minDeliveryTime}
+                            restaurantMaxDeliveryTime={restaurant.maxDeliveryTime}
+                            restaurantTimeStamp={restaurant.timeStamp}
+                        />
+                    ))}
+                </div>
+              </div>
+
             </div>
           </section>
         </main>
