@@ -10,6 +10,8 @@ import { getRestaurantsByUserLocation } from '../../../../redux/Actions/Restaura
 import PriceFilter from './PriceFilter'
 import SortFilters from './SortFilter'
 import DeliveryFeeFilter from './DeliveryFeeFilter'
+import CategoryFilter from './CategoryFilter'
+import DietFilter from './DietFilters'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -21,20 +23,21 @@ const sortOptions = [
 const subCategories = [
   { name: 'Top Rated', href: '#' },
   { name: 'Delivery Time', href: '#' },
-  { name: 'Most Popular', href: '#' },
-  { name: 'Best Rating', href: '#' }
+  { name: 'Newest', href: '#' },
+  // { name: 'Most Popular', href: '#' },
+  // { name: 'Best Rating', href: '#' }
 ]
 const filters = [
-  {
-    id: 'Sort',
-    name: 'Sort',
-    opt: 'options',
-    options: [
-      { value: 'Newest', label: 'newest', checked: false },
-      { value: 'Price: Low to High', label: 'price-low-to-high', checked: false },
-      { value: 'Price: High to Low', label: 'price-high-to-low', checked: true }
-    ],
-  },
+  // {
+  //   id: 'Sort',
+  //   name: 'Sort',
+  //   opt: 'options',
+  //   options: [
+  //     { value: 'newest', label: 'Newest', checked: false },
+  //     { value: 'price-low-to-high', label: 'Price: Low to High', checked: false },
+  //     { value: 'price-high-to-low', label: 'Price: High to Low', checked: true }
+  //   ],
+  // },
   {
     id: 'Price',
     name: 'Price',
@@ -44,6 +47,11 @@ const filters = [
     id: 'Delivery Fee',
     name: 'Delivery Fee',
     opt: 'delivery-fee'
+  },
+  {
+    id: 'Dietary',
+    name: 'Dietary',
+    opt: 'dietary'
   },
 ];
 
@@ -304,10 +312,8 @@ export const HomeFilters = () => {
               <form className="sm:hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
                 <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                  {subCategories.map((category, optionIdx) => (
+                  {/* {subCategories.map((category, optionIdx) => (
                     <li key={category.name}>
-                      {/* <a href={category.href}>{category.name}</a> */}
-                      
                       <div key={category.name} className="">
                             <input
                               id={`filter-mobile-${category.name}-${optionIdx}`}
@@ -325,7 +331,8 @@ export const HomeFilters = () => {
                             </label>
                           </div>
                     </li>
-                  ))}
+                  ))} */}
+                  <CategoryFilter subCategories={subCategories} />
                 </ul>
 
                 {filters.map((section) => (
@@ -355,7 +362,11 @@ export const HomeFilters = () => {
                               : <>
                                   {section.opt === 'delivery-fee' ?
                                     <DeliveryFeeFilter />
-                                  : null}
+                                :<>
+                                  {section.opt === 'dietary' ?
+                                    <DietFilter /> 
+                                    : null}
+                                </>}
                               </>}
                             </>}
                           </div>

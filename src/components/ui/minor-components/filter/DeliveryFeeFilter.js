@@ -19,7 +19,7 @@ const DeliveryFeeFilter = () => {
             <div className='ranger-filter-inner-one !font-bold'>$6+</div>
           </div>
           <input
-            className='range-filter-input !relative'
+            className='range-filter-input !relative !text-bgOrangeColor'
             max='3'
             min='0'
             type="range"
