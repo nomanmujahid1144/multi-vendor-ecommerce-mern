@@ -33,6 +33,7 @@ module.exports = {
         'textColorBlack': '#21201e',
         'textColorWhite': '#FFFFFF',
 
+        'lightGrayBackground' : '#EEEEEE',
         
         'loaderBg': 'rgba(0 , 0, 0 , 0.6)'
       },

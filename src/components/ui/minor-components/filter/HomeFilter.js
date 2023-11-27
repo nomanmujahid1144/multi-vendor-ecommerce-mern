@@ -7,6 +7,9 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAlert } from 'react-alert'
 import { baseURL } from '../../../../constants/baseURL'
 import { getRestaurantsByUserLocation } from '../../../../redux/Actions/RestaurantAction'
+import PriceFilter from './PriceFilter'
+import SortFilters from './SortFilter'
+import DeliveryFeeFilter from './DeliveryFeeFilter'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -298,7 +301,7 @@ export const HomeFilters = () => {
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
-              <form className="hidden lg:block">
+              <form className="sm:hidden lg:block">
                 <h3 className="sr-only">Categories</h3>
                 <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                   {subCategories.map((category, optionIdx) => (
@@ -312,7 +315,7 @@ export const HomeFilters = () => {
                               defaultValue={false}
                               type="radio"
                               defaultChecked={false}
-                              className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              className="h-4 w-4 rounded-full border-gray-300 text-bgOrangeColor focus:ring-bgOrangeColor"
                             />
                             <label
                               htmlFor={`filter-mobile-${category.name}-${optionIdx}`}
@@ -344,48 +347,14 @@ export const HomeFilters = () => {
                         <Disclosure.Panel className="pt-6">
                           <div className="space-y-4">
                           {section.opt === 'options' ? <>
-                            {section.options.map((option, optionIdx) => (
-                              <div key={option.value} className="flex items-center">
-                                <input
-                                  id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  defaultValue={option.value}
-                                  type="checkbox"
-                                  defaultChecked={option.checked}
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                <label
-                                  htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 text-sm text-gray-600"
-                                >
-                                  {option.label}
-                                </label>
-                              </div>
-                            ))}
+                            <SortFilters section={section}/>
                           </>
                           : <>
                                 {section.opt === 'price-tabs' ? 
-                                  <div className='flex flex-wrap gap-3'>
-                                    <button className='bg-bgOrangeColor hover:bg-bgOrangeColorHover text-textColorWhite px-3 py-2 rounded-full'>$</button>  
-                                    <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$</button>  
-                                    <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$$</button>  
-                                    <button className='bg-[#EEEEEE] px-3 py-2 rounded-full'>$$$$</button>  
-                                  </div>  
+                                  <PriceFilter /> 
                               : <>
                                   {section.opt === 'delivery-fee' ?
-                                      <div className='ranger-filter-container'>
-                                        <div className='ranger-filter-inner'>
-                                          <div className='ranger-filter-wrapper'>
-                                            <div className='ranger-filter-inner-wrapper'>
-                                              <div className='ranger-filter-inner-one'>$2</div>
-                                              <div className='ranger-filter-inner-one'>$4</div>
-                                              <div className='ranger-filter-inner-one'>$6</div>
-                                              <div className='ranger-filter-inner-one'>$10</div>
-                                            </div>
-                                            <input className='range-filter-input' max="3" type="range" value="2" />
-                                          </div>
-                                        </div>
-                                      </div>
+                                    <DeliveryFeeFilter />
                                   : null}
                               </>}
                             </>}
