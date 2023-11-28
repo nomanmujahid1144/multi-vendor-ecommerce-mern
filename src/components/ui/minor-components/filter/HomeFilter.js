@@ -64,22 +64,90 @@ export const HomeFilters = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const diningMode = params.get('diningMode');
+  const categories = params.get('category') ? params.get('category').split(',') : [];
+  const prices = params.get('price') ? params.get('price').split(',') : [];
+  const diets = params.get('diet') ? params.get('diet').split(',') : [];
+
+  
 
   const [locationFromIndexPage, setLocationFromIndexPage] = useState();
+  const [listedProducts, setListedProducts] = useState([]);
+  const [filterProducts, setFilteredProducts] = useState([]);
 
   const { restaurantsByUserLocation } = useSelector(
       (state) => state.restaurantReducer
   );
 
-  useEffect(() => {
-    if (diningMode === 'DELIVERY') {
-      // Do something for DELIVERY mode
-      console.log('DELIVERY')
-    } else if (diningMode === 'PICKUP') {
-      // Do something for PICKUP mode
-      console.log('PICKUP')
+  const applyFilters = (restaurants, diningMode, selectedCategories, selectedPrices, selectedDiets) => {
+    
+    console.log(restaurants, 'restaurants')
+    console.log(diningMode, 'diningMode')
+    console.log(selectedCategories,'selectedCategories')
+    console.log(selectedDiets, 'selectedDiets')
+    console.log(selectedPrices, 'selectedPrices')
+    
+    let filteredRestaurants = restaurants;
+  
+    // Apply dining mode filter
+    filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+      // Your condition for dining mode
+      return restaurant.diningMode?.toLowerCase() === diningMode?.toLowerCase();
+    });
+  
+    // Apply category filter
+    if (selectedCategories.length > 0) {
+      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+        // Your condition for categories
+        return selectedCategories.includes(restaurant.category);
+      });
     }
-  }, [diningMode])
+  
+  // Apply price filter
+  if (selectedPrices.length > 0) {
+    filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+      // Check if any product in the restaurant matches the selected price
+      return restaurant.products.some((product) => {
+        // Assuming product.price is a number, convert it to string and check the first character
+        const productPriceFirstDigit = product.price.toString()[0];
+        return selectedPrices.includes(productPriceFirstDigit);
+      });
+    });
+  }
+
+  
+    // Apply diet filter
+    if (selectedDiets.length > 0) {
+      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+        // Check if any selected diet matches any dietary option of the restaurant
+        return selectedDiets.some((selectedDiet) => {
+          return restaurant.dietary.includes(selectedDiet.replace(/\s+/g, '-').toLowerCase());
+        });
+      });
+    }
+    
+  
+    return filteredRestaurants;
+  };
+
+  useEffect(() => {
+    // Apply filters and get the updated list of restaurants
+    const filteredList = applyFilters(
+      restaurantsByUserLocation,
+      diningMode,
+      categories,
+      prices,
+      diets
+    );
+
+    // Log the filtered list
+    console.log('Filtered Restaurants:', filteredList);
+    setFilteredProducts(filteredList)
+    // setFilteredProducts(filteredList);
+    // if (filteredList.length > 0) {
+    // }
+
+  }, [diningMode, categories, prices, diets]);
+  
 
   useEffect(() => {
     const Geomatery = localStorage.getItem('geomatery');
@@ -96,12 +164,20 @@ export const HomeFilters = () => {
     }
   }, [locationFromIndexPage]);
 
+
+  // useEffect(() => {
+  //   if (restaurantsByUserLocation.length > 0) {
+  //     setFilteredProducts(restaurantsByUserLocation)
+  //   }
+  // }, [restaurantsByUserLocation]);
+
   return (
     <div className="bg-white">
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
           <Dialog as="div" className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>
+            {console.log(restaurantsByUserLocation, 'restaurantsByUserLocation')}
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -364,7 +440,7 @@ export const HomeFilters = () => {
                                     <DeliveryFeeFilter />
                                 :<>
                                   {section.opt === 'dietary' ?
-                                    <DietFilter /> 
+                                          <DietFilter />
                                     : null}
                                 </>}
                               </>}
@@ -380,7 +456,7 @@ export const HomeFilters = () => {
               {/* Product grid */}
               <div className="lg:col-span-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:grid-cols-3">
-                    {restaurantsByUserLocation?.map((restaurant) => (
+                    {filterProducts?.map((restaurant) => (
                         <PopularRestaurant
                             goToSingleRestaurant={`/restaurant/${restaurant._id}`}
                             restaurantName={restaurant.restaurantName}

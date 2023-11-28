@@ -24,12 +24,23 @@ import { SubmitButton } from "../../minor-components/button/SubmitButton";
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import { addRestaurant } from "../../../../redux/Actions/RestaurantAction"
+import ReactSelect from "react-select";
 // MAP-Creation
 const containerStyle = {
     width: "100%",
     height: '50vh'
 };
 const center = { lat: 40.7810694898019, lng: -102.88417905250878 }
+
+
+// Dietary Options
+
+const Option = [
+    { label: 'Vegetarian', value: 'vegetarian' },
+    { label: 'Non Vegetarian', value: 'non-vegetarian' },
+    { label: 'Halal', value: 'halal' },
+    { label: 'Gluten Free', value: 'gluten-free' },
+  ]
 
 export const RestaurantRegistration = () => {
 
@@ -65,6 +76,7 @@ export const RestaurantRegistration = () => {
     const [formattedAddress, setFormattedAddress] = useState('');
     const [selected, setSelected] = useState(null);
     const [radius, setRadius] = useState('');
+    const [dietary, setDietery] = useState([]);
   
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -81,9 +93,9 @@ export const RestaurantRegistration = () => {
 
         credentials.geometry = obj.geometry
         credentials.formattedAddress = obj.formattedAddress
+        credentials.dietary = dietary;
 
         dispatch(addRestaurant(credentials, formData, navigate, alert));
-    //   const { email, password } = credentials;
     };
   
     const onChange = (e) => {
@@ -114,7 +126,13 @@ export const RestaurantRegistration = () => {
         setSelectCoverImagePreview(null);
         setRestaurantLogo(null);
         setRestaurantLogoPreview(null);
-    } 
+    };
+
+    // Handle input changes and update suggestions
+    const handleInputChange = async (selectedOptions) => {
+        // const inputValue = event.target.value;
+        setDietery(selectedOptions?.map((option) => option.value));
+    };
 
     return (
         <>
@@ -340,6 +358,19 @@ export const RestaurantRegistration = () => {
                                             id="diningMode"
                                             value={credentials.diningMode}
                                             onChange={onChange}
+                                        />
+                                    </div>
+                                </div>
+                                <div >
+                                    <div className="form-group">
+                                        <ReactSelect
+                                            className="mt-3 w-full py-2 px-3 bg-transparent dark:bg-slate-900 dark:text-slate-200 rounded outline-none border border-gray-200 focus:border-indigo-600 dark:border-gray-800 dark:focus:border-indigo-600 focus:ring-0"
+                                            isMulti
+                                            placeholder="Select one or More Dietery"
+                                            // name="dietery"
+                                            options={Option}
+                                            defaultValue={dietary}
+                                            onChange={handleInputChange}
                                         />
                                     </div>
                                 </div>

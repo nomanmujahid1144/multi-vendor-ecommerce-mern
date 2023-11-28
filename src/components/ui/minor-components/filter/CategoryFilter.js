@@ -14,23 +14,32 @@ const CategoryFilter = ({ subCategories }) => {
 
   const [selectedCategories, setSelectedCategories] = useState(initialSelectedCategories);
 
-  useEffect(() => {
-    // Check if the component just mounted or if categories changed
-    const shouldUpdateURL =
-      queryParams.get('category') === null || queryParams.get('category') !== selectedCategories.join(',');
-
-    if (shouldUpdateURL) {
-      const updatedParams = selectedCategories.length > 0
-        ? `diningMode=DELIVERY&category=${selectedCategories.join(',')}`
-        : 'diningMode=DELIVERY';
-
-      // Update URL using useNavigate
-      navigate(`?${updatedParams}`);
-
-      // Save selected categories to local storage
-      localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
+  const updateURL = (categories) => {
+    const queryParams = new URLSearchParams(location.search);
+  
+    // Update or set the 'category' parameter
+    if (categories.length > 0) {
+      queryParams.set('category', categories.join(','));
+    } else {
+      queryParams.delete('category');
     }
-  }, [selectedCategories, navigate, queryParams]);
+  
+    // Preserve other query parameters
+    const existingParams = queryParams.toString();
+    const updatedParams = existingParams ? `diningMode=DELIVERY&${existingParams}` : 'diningMode=DELIVERY';
+  
+    navigate(`?${updatedParams}`);
+  };
+
+  useEffect(() => {
+    console.log('Category Filter');
+
+    // Update URL based on selected categories
+    updateURL(selectedCategories);
+
+    // Save selected categories to local storage
+    localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
+  }, [selectedCategories, navigate]);
 
   const handleCategoryChange = (categoryName) => {
     setSelectedCategories((prevSelected) =>

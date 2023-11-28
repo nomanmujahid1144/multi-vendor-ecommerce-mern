@@ -7,12 +7,36 @@ const PriceFilter = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  const priceOptions = [
-    { value: '$', label: '$' },
-    { value: '$$', label: '$$' },
-    { value: '$$$', label: '$$$' },
-    { value: '$$$$', label: '$$$$' },
-  ];
+  const parseAndUpdateURL = () => {
+    // Parse the 'price' parameter from the URL and update selectedPrices
+    const urlPrices = queryParams.get('price');
+    if (urlPrices) {
+      const decodedPrices = urlPrices.split(',').map(price => {
+        switch (price) {
+          case 'dollar':
+            return '$';
+          case 'doubleDollar':
+            return '$$';
+          case 'tripleDollar':
+            return '$$$';
+          case 'quadrupleDollar':
+            return '$$$$';
+          default:
+            return price;
+        }
+      });
+
+      setSelectedPrices(decodedPrices);
+    }
+
+    // Update the URL based on the selected prices
+    updateURL(selectedPrices);
+  };
+
+  useEffect(() => {
+    console.log('Price Filter');
+    parseAndUpdateURL();
+  }, []);
 
   const handleButtonClick = (value) => {
     const newSelectedPrices = [...selectedPrices];
@@ -53,46 +77,20 @@ const PriceFilter = () => {
     navigate(`?${queryParams.toString()}`);
   };
 
-  useEffect(() => {
-    // Parse the 'price' parameter from the URL and update selectedPrices
-    const urlPrices = queryParams.get('price');
-    if (urlPrices) {
-      const decodedPrices = urlPrices.split(',').map(price => {
-        switch (price) {
-          case 'dollar':
-            return '$';
-          case 'doubleDollar':
-            return '$$';
-          case 'tripleDollar':
-            return '$$$';
-          case 'quadrupleDollar':
-            return '$$$$';
-          default:
-            return price;
-        }
-      });
-  
-      setSelectedPrices(decodedPrices);
-    }
-  
-    // Update the URL based on the selected prices
-    updateURL(selectedPrices);
-  }, [queryParams, selectedPrices]);
-
   return (
     <div className='flex flex-wrap gap-3'>
-      {priceOptions.map((option) => (
+      {['$', '$$', '$$$', '$$$$'].map((option) => (
         <button
-          key={option.value}
+          key={option}
           type="button"
           className={`${
-            selectedPrices.includes(option.value)
+            selectedPrices.includes(option)
               ? 'bg-bgOrangeColor hover:bg-bgOrangeColorHover text-textColorWhite'
               : 'bg-lightGrayBackground'
           } px-3 py-2 rounded-full`}
-          onClick={() => handleButtonClick(option.value)}
+          onClick={() => handleButtonClick(option)}
         >
-          {option.label}
+          {option}
         </button>
       ))}
     </div>

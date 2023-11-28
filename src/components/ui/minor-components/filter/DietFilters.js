@@ -1,46 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const DietFilter = () => {
-  const [selectedPrices, setSelectedPrices] = useState([]);
+  const [selectedDiets, setSelectedDiets] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
-  // Define your price options
-  const priceOptions = [
-    { value: 'vegetarian', label: 'Vegetarian' },
-    { value: 'non-vegetarian', label: 'Non Vegetarian' },
-    { value: 'halal', label: 'Halal' },
-    { value: 'gluten-free', label: 'Gluten Free' },
-  ];
-
-  // Function to handle button click
-  const handleButtonClick = (value) => {
-    const newSelectedPrices = [...selectedPrices];
-
-    // Toggle the selection
-    if (newSelectedPrices.includes(value)) {
-      // Remove from selected if already present
-      newSelectedPrices.splice(newSelectedPrices.indexOf(value), 1);
-    } else {
-      // Add to selected if not present
-      newSelectedPrices.push(value);
+  const parseAndUpdateURL = () => {
+    const urlDiets = queryParams.get('diet');
+    if (urlDiets) {
+      const decodedDiets = urlDiets.split(',').map(diet => diet.trim());
+      setSelectedDiets(decodedDiets);
     }
 
-    setSelectedPrices(newSelectedPrices);
+    updateURL(selectedDiets);
+  };
+
+  useEffect(() => {
+    console.log('Diet Filter');
+    parseAndUpdateURL();
+  }, []);
+
+  const handleButtonClick = (value) => {
+    const newSelectedDiets = [...selectedDiets];
+
+    if (newSelectedDiets.includes(value)) {
+      newSelectedDiets.splice(newSelectedDiets.indexOf(value), 1);
+    } else {
+      newSelectedDiets.push(value);
+    }
+
+    setSelectedDiets(newSelectedDiets);
+    updateURL(newSelectedDiets);
+  };
+
+  const updateURL = (selectedDiets) => {
+    queryParams.delete('diet');
+
+    if (selectedDiets.length > 0) {
+      queryParams.set('diet', selectedDiets.join(','));
+    }
+
+    navigate(`?${queryParams.toString()}`);
   };
 
   return (
     <div className='flex flex-wrap gap-3'>
-      {priceOptions.map((option) => (
+      {['Vegetarian', 'Non Vegetarian', 'Halal', 'Gluten Free'].map((option) => (
         <button
-          key={option.value}
+          key={option}
           type="button"
           className={`${
-            selectedPrices.includes(option.value)
+            selectedDiets.includes(option.toLowerCase())
               ? 'bg-bgOrangeColor hover:bg-bgOrangeColorHover text-textColorWhite'
               : 'bg-lightGrayBackground'
           } px-3 py-2 rounded-full`}
-          onClick={() => handleButtonClick(option.value)}
+          onClick={() => handleButtonClick(option.toLowerCase())}
         >
-          {option.label}
+          {option}
         </button>
       ))}
     </div>

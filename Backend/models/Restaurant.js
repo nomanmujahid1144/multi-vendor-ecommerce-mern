@@ -55,6 +55,10 @@ const restaurant = new mongoose.Schema({
         type: String,
         default: ''
     },
+    dietary: {
+        type: Array,
+        default: []
+    },
     tax: {
         type: Number,
         default: 0

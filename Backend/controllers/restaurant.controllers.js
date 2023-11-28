@@ -303,39 +303,42 @@ exports.updateRestaurantStatusToApproved = async (req, res, next) => {
       return next(new ErrorResponse(err, 400));
     }
 };
-exports.getRestaurantsByUserLocation = async (req, res, next) => {
+// exports.getRestaurantsByUserLocation = async (req, res, next) => {
 
-    try {
-        const allRestaurants = await Restaurant.findOne({_id: mongoose.Types.ObjectId(req.user.data[1])});
-        const restaurantProducts = await Product.find({ restaurantId : mongoose.Types.ObjectId(req.user.data[1])});
-        const restaurantCategories = await Category.find({ restaurantId : mongoose.Types.ObjectId(req.user.data[1])});
+//     try {
 
-        if (allRestaurants) {
-            // Convert the Mongoose document to a plain JavaScript object
-            const restaurants = allRestaurants.toObject();
+//         console.log(req.body)
 
-            restaurants.products = restaurantProducts.length > 0 ? restaurantProducts : []; 
-            restaurants.categories = restaurantCategories.length > 0 ? restaurantCategories : []; 
+//         const allRestaurants = await Restaurant.findOne({_id: mongoose.Types.ObjectId(req.user.data[1])});
+//         const restaurantProducts = await Product.find({ restaurantId : mongoose.Types.ObjectId(req.user.data[1])});
+//         const restaurantCategories = await Category.find({ restaurantId : mongoose.Types.ObjectId(req.user.data[1])});
+
+//         if (allRestaurants) {
+//             // Convert the Mongoose document to a plain JavaScript object
+//             const restaurants = allRestaurants.toObject();
+
+//             restaurants.products = restaurantProducts.length > 0 ? restaurantProducts : []; 
+//             restaurants.categories = restaurantCategories.length > 0 ? restaurantCategories : []; 
             
 
-            return res.status(200).json({
-                success: true,
-                message: 'Got Restaurants Successfully',
-                data: restaurants
-            });
+//             return res.status(200).json({
+//                 success: true,
+//                 message: 'Got Restaurants Successfully',
+//                 data: restaurants
+//             });
 
-        } else {
-            return res.status(200).json({
-                success: false,
-                message: 'No Restaurant Found',
-                data: []
-            });
-        }
-    }
-    catch (err) {
-        return next(new ErrorResponse(err, 400))
-    }
-}
+//         } else {
+//             return res.status(200).json({
+//                 success: false,
+//                 message: 'No Restaurant Found',
+//                 data: []
+//             });
+//         }
+//     }
+//     catch (err) {
+//         return next(new ErrorResponse(err, 400))
+//     }
+// }
 exports.getRestaurantsByUserLocation = async (req, res, next) => {
     console.log(req.body, "order Body")
   
@@ -393,19 +396,34 @@ exports.getRestaurantsByUserLocation = async (req, res, next) => {
           }
         ])
   
-        console.log(totalDistance, 'Distance')
-  
-        return res.status(200).json({
-          success: true,
-          message: "All Nearest Restaurants",
-          data: totalDistance,
+          
+        // Use map to create an array of promises
+        const promises = totalDistance.map(async (restaurant) => {
+            const products = await Product.find({ restaurantId: mongoose.Types.ObjectId(restaurant._id) });
+            restaurant.products = products;
+            return restaurant;
+        });
+
+          console.log(totalDistance, 'Distance')
+          
+        // Use Promise.all to wait for all promises to resolve
+        Promise.all(promises)
+        .then((restaurantsWithProducts) => {
+            return res.status(200).json({
+                success: true,
+                message: "All Nearest Restaurants",
+                data: restaurantsWithProducts,
+            });
+        })
+        .catch((err) => {
+            return next(new ErrorResponse(err, 400));
         });
       }
   
     } catch (err) {
       return next(new ErrorResponse(err, 400));
     }
-  };
+};
 
 exports.getRadius = async (req, res, next) => {
 
