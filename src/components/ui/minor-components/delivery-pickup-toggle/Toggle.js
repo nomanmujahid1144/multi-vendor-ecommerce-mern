@@ -1,27 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate  } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const DeliveryPickupToggle = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Parse the URL query parameters to determine the initial mode
   const initialMode = new URLSearchParams(location.search).get('diningMode') || 'DELIVERY';
+  const initialDeliveryFee = new URLSearchParams(location.search).get('df') || 3;
 
   const [diningMode, setDiningMode] = useState(initialMode);
+  const [defaultDeliveryFee, setDefaultDeliveryFee] = useState(initialDeliveryFee);
 
-  // Update the URL when the dining mode changes
+  // Handle navigation when diningMode changes
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    searchParams.set('diningMode', diningMode);
-      // history.push({ search: searchParams.toString() });
-    navigate(`?${searchParams.toString()}`);
-  }, [diningMode, location.search, navigate]);
+    if (location.pathname === '/home') {
+      const searchParams = new URLSearchParams(location.search);
+      searchParams.set('diningMode', diningMode);
+      searchParams.set('df', defaultDeliveryFee);
+      navigate(`?${searchParams.toString()}`);
+    }
+  }, [diningMode, defaultDeliveryFee, location.pathname, location.search, navigate]);
 
-  const handleToggle = () => {
+  const handleToggle = (mode) => {
+    console.log(mode, 'mode')
     // Toggle between DELIVERY and PICKUP
-    setDiningMode((prevMode) => (prevMode === 'DELIVERY' ? 'PICKUP' : 'DELIVERY'));
+    // const newMode = diningMode === 'DELIVERY' ? 'PICKUP' : 'DELIVERY';
+    if (diningMode !== mode) {
+      // Update the state to reflect the new diningMode
+      setDiningMode(mode);
+    }
+
   };
+
+  if (location.pathname !== '/home') {
+    return null;
+  }
 
   return (
     <div className='delivery-pickup-toggle-container'>
@@ -30,7 +43,7 @@ const DeliveryPickupToggle = () => {
           className={`delivery-pickup-toggle-delivery ${
             diningMode === 'DELIVERY' ? 'bg-white' : ''
           } rounded-full`}
-          onClick={handleToggle}
+          onClick={() => handleToggle('DELIVERY')}
         >
           <div className='delivery-pickup-toggle-delivery-btn'>Delivery</div>
         </div>
@@ -38,7 +51,7 @@ const DeliveryPickupToggle = () => {
           className={`delivery-pickup-toggle-delivery ${
             diningMode === 'PICKUP' ? 'bg-white' : ''
           } rounded-full`}
-          onClick={handleToggle}
+          onClick={() => handleToggle('PICKUP')}
         >
           <div className='delivery-pickup-toggle-delivery-btn'>Pickup</div>
         </div>

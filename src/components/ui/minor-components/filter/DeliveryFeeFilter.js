@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const DeliveryFeeFilter = () => {
+const DeliveryFeeFilter = ({alredyselectedDeliveryFee, handleClickDeliveryFee}) => {
   const [selectedValue, setSelectedValue] = useState(3);
 
   const handleRangeChange = (e) => {
     const value = parseInt(e.target.value, 10); // Parse the value as an integer
-    setSelectedValue(value);
+    handleClickDeliveryFee(value);
+    // setSelectedValue(value);
   };
+
+  useEffect(() => {
+    setSelectedValue(alredyselectedDeliveryFee)
+  }, [alredyselectedDeliveryFee])
 
   return (
     <div className='ranger-filter-container'>

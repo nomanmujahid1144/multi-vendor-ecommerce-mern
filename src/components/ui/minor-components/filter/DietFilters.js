@@ -1,49 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const DietFilter = () => {
+const DietFilter = ({alredyselectedDiet, handleClickDiet}) => {
   const [selectedDiets, setSelectedDiets] = useState([]);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-
-  const parseAndUpdateURL = () => {
-    const urlDiets = queryParams.get('diet');
-    if (urlDiets) {
-      const decodedDiets = urlDiets.split(',').map(diet => diet.trim());
-      setSelectedDiets(decodedDiets);
-    }
-
-    updateURL(selectedDiets);
-  };
 
   useEffect(() => {
-    console.log('Diet Filter');
-    parseAndUpdateURL();
-  }, []);
+    setSelectedDiets(alredyselectedDiet)
+  }, [alredyselectedDiet])
 
   const handleButtonClick = (value) => {
-    const newSelectedDiets = [...selectedDiets];
-
-    if (newSelectedDiets.includes(value)) {
-      newSelectedDiets.splice(newSelectedDiets.indexOf(value), 1);
-    } else {
-      newSelectedDiets.push(value);
-    }
-
-    setSelectedDiets(newSelectedDiets);
-    updateURL(newSelectedDiets);
+    handleClickDiet(value)
   };
 
-  const updateURL = (selectedDiets) => {
-    queryParams.delete('diet');
 
-    if (selectedDiets.length > 0) {
-      queryParams.set('diet', selectedDiets.join(','));
-    }
-
-    navigate(`?${queryParams.toString()}`);
-  };
 
   return (
     <div className='flex flex-wrap gap-3'>

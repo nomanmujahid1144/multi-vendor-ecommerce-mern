@@ -12,32 +12,21 @@ import SortFilters from './SortFilter'
 import DeliveryFeeFilter from './DeliveryFeeFilter'
 import CategoryFilter from './CategoryFilter'
 import DietFilter from './DietFilters'
+import { isTaxInRange } from '../../../../constants/helpingFunctions'
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
-]
+// const sortOptions = [
+//   { name: 'Most Popular', href: '#', current: true },
+//   { name: 'Best Rating', href: '#', current: false },
+//   { name: 'Newest', href: '#', current: false },
+//   { name: 'Price: Low to High', href: '#', current: false },
+//   { name: 'Price: High to Low', href: '#', current: false },
+// ]
 const subCategories = [
   { name: 'Top Rated', href: '#' },
   { name: 'Delivery Time', href: '#' },
-  { name: 'Newest', href: '#' },
-  // { name: 'Most Popular', href: '#' },
-  // { name: 'Best Rating', href: '#' }
+  { name: 'Newest', href: '#' }
 ]
 const filters = [
-  // {
-  //   id: 'Sort',
-  //   name: 'Sort',
-  //   opt: 'options',
-  //   options: [
-  //     { value: 'newest', label: 'Newest', checked: false },
-  //     { value: 'price-low-to-high', label: 'Price: Low to High', checked: false },
-  //     { value: 'price-high-to-low', label: 'Price: High to Low', checked: true }
-  //   ],
-  // },
   {
     id: 'Price',
     name: 'Price',
@@ -64,90 +53,57 @@ export const HomeFilters = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const diningMode = params.get('diningMode');
-  const categories = params.get('category') ? params.get('category').split(',') : [];
-  const prices = params.get('price') ? params.get('price').split(',') : [];
-  const diets = params.get('diet') ? params.get('diet').split(',') : [];
+  const categories = params.get('category') || [];
+  const prices = params.get('price') || [];
+  const diets = params.get('diet') || [];
+  const deliveryFee = params.get('df') || 3;
 
   
 
   const [locationFromIndexPage, setLocationFromIndexPage] = useState();
-  const [listedProducts, setListedProducts] = useState([]);
+  const [filterRestaurants, setFilteredRestaurants] = useState(false);
   const [filterProducts, setFilteredProducts] = useState([]);
+
+  // Category Filter State
+  const initialSelectedCategories = params.get('category')
+    ? params.get('category').split(',')
+    : JSON.parse(localStorage.getItem('selectedCategories')) || [];
+  const [selectedCategories, setSelectedCategories] = useState(initialSelectedCategories);
+
+  // Price Filter State
+  const [selectedPrices, setSelectedPrices] = useState([]);
+  const urlPrices = params.get('price');
+  let decodedPrices = [];
+  if (urlPrices) {
+    decodedPrices = urlPrices.split(',').map(price => {
+      switch (price) {
+        case 'dollar':
+          return '$';
+        case 'doubleDollar':
+          return '$$';
+        case 'tripleDollar':
+          return '$$$';
+        case 'quadrupleDollar':
+          return '$$$$';
+        default:
+          return price;
+      }
+    });
+  }
+
+  // diet Filter State
+  const [selectedDiet, setSelectedDiet] = useState([])
+  const urlDiets = params.get('diet');
+    if (urlDiets) {
+      const decodedDiets = urlDiets.split(',').map(diet => diet.trim());
+    }
+  // delivery fee Filter State
+  const [selectedDeliveryFee, setSelectedDeliveryFee] = useState(3)
+  const urlDeliveryFee = params.get('df');
 
   const { restaurantsByUserLocation } = useSelector(
       (state) => state.restaurantReducer
   );
-
-  const applyFilters = (restaurants, diningMode, selectedCategories, selectedPrices, selectedDiets) => {
-    
-    console.log(restaurants, 'restaurants')
-    console.log(diningMode, 'diningMode')
-    console.log(selectedCategories,'selectedCategories')
-    console.log(selectedDiets, 'selectedDiets')
-    console.log(selectedPrices, 'selectedPrices')
-    
-    let filteredRestaurants = restaurants;
-  
-    // Apply dining mode filter
-    filteredRestaurants = filteredRestaurants.filter((restaurant) => {
-      // Your condition for dining mode
-      return restaurant.diningMode?.toLowerCase() === diningMode?.toLowerCase();
-    });
-  
-    // Apply category filter
-    if (selectedCategories.length > 0) {
-      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
-        // Your condition for categories
-        return selectedCategories.includes(restaurant.category);
-      });
-    }
-  
-  // Apply price filter
-  if (selectedPrices.length > 0) {
-    filteredRestaurants = filteredRestaurants.filter((restaurant) => {
-      // Check if any product in the restaurant matches the selected price
-      return restaurant.products.some((product) => {
-        // Assuming product.price is a number, convert it to string and check the first character
-        const productPriceFirstDigit = product.price.toString()[0];
-        return selectedPrices.includes(productPriceFirstDigit);
-      });
-    });
-  }
-
-  
-    // Apply diet filter
-    if (selectedDiets.length > 0) {
-      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
-        // Check if any selected diet matches any dietary option of the restaurant
-        return selectedDiets.some((selectedDiet) => {
-          return restaurant.dietary.includes(selectedDiet.replace(/\s+/g, '-').toLowerCase());
-        });
-      });
-    }
-    
-  
-    return filteredRestaurants;
-  };
-
-  useEffect(() => {
-    // Apply filters and get the updated list of restaurants
-    const filteredList = applyFilters(
-      restaurantsByUserLocation,
-      diningMode,
-      categories,
-      prices,
-      diets
-    );
-
-    // Log the filtered list
-    console.log('Filtered Restaurants:', filteredList);
-    setFilteredProducts(filteredList)
-    // setFilteredProducts(filteredList);
-    // if (filteredList.length > 0) {
-    // }
-
-  }, [diningMode, categories, prices, diets]);
-  
 
   useEffect(() => {
     const Geomatery = localStorage.getItem('geomatery');
@@ -164,12 +120,183 @@ export const HomeFilters = () => {
     }
   }, [locationFromIndexPage]);
 
+  
+  const applyFilters = (restaurants, diningMode, selectedCategories, selectedPrices, selectedDiets, deliveryFee) => {
+    
+    // console.log(restaurants, 'restaurants')
+    // console.log(diningMode, 'diningMode')
+    // console.log(selectedCategories,'selectedCategories')
+    // console.log(selectedDiets, 'selectedDiets')
+    
+    let filteredRestaurants = restaurants;
+    
+    console.log(filterRestaurants, 'filterRestaurants')
+    console.log(selectedPrices, 'selectedPrices')
 
-  // useEffect(() => {
-  //   if (restaurantsByUserLocation.length > 0) {
-  //     setFilteredProducts(restaurantsByUserLocation)
-  //   }
-  // }, [restaurantsByUserLocation]);
+    // Apply dining mode filter
+    filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+      // Your condition for dining mode
+      return restaurant.diningMode?.toLowerCase() === diningMode?.toLowerCase();
+    });
+  
+    // Apply category filter
+    if (selectedCategories.length > 0) {
+      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+        // Your condition for categories
+        return selectedCategories.includes(restaurant.category);
+      });
+    }
+  
+    // Apply price filter
+    if (selectedPrices.length > 0) {
+      // Filter restaurants based on the selected prices
+      filteredRestaurants = filteredRestaurants.filter(restaurant => {
+        // Check if at least one product in the restaurant matches the selected price
+        return restaurant.products.some(product => {
+          // Assuming product.price is a number, convert it to string and get the appropriate price tag
+          const priceTag = (() => {
+            const priceLength = product.price.toString().length;
+            if (priceLength === 1) return 'dollar';
+            if (priceLength === 2) return 'doubleDollar';
+            if (priceLength === 3) return 'tripleDollar';
+            if (priceLength === 4) return 'quadrupleDollar';
+            // You can define more ranges if needed
+            return 'other';
+          })();
+
+          // Check if the price tag is in the selected prices
+          return selectedPrices.includes(priceTag.toString());
+        });
+      });
+    }
+  
+    // Apply diet filter
+    if (selectedDiet.length > 0) {
+      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+        // Check if any selected diet matches any dietary option of the restaurant
+        return selectedDiet.some((selectedDiet) => {
+          return restaurant.dietary.includes(selectedDiet.replace(/\s+/g, '-').toLowerCase());
+        });
+      });
+    }
+
+    // Filter restaurants based on the selected delivery fee
+    filteredRestaurants = filteredRestaurants.filter(restaurant => {
+      return isTaxInRange(restaurant.tax, selectedDeliveryFee);
+    });
+
+
+  
+    return filteredRestaurants;
+    // setFilteredProducts(filteredRestaurants)
+  };
+  
+  useEffect(() => { 
+    const newSearchParams = new URLSearchParams();
+    newSearchParams.set('df', selectedDeliveryFee);
+  }, []) 
+
+  useEffect(() => {
+
+    if (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0) {
+    }
+    // Apply filters and get the updated list of restaurants
+    const filteredList = applyFilters(
+      restaurantsByUserLocation,
+      diningMode,
+      categories,
+      prices,
+      diets,
+      deliveryFee
+    );
+
+    // Log the filtered list
+    console.log('Filtered Restaurants:', filteredList);
+    setFilteredProducts(filteredList);
+    
+  }, [diningMode, filterRestaurants])
+
+
+
+  // Update URL Function
+  const updateURL = () => {
+    const diningMode = params.get('diningMode');
+    const newSearchParams = new URLSearchParams();
+  
+    if (diningMode) {
+      newSearchParams.set('diningMode', diningMode);
+    }
+
+    if (selectedCategories.length > 0) {
+      newSearchParams.set('category', selectedCategories.join(','));
+    }
+    if (selectedPrices.length > 0) {
+      const readablePrices = selectedPrices.map(price => {
+        switch (price) {
+          case '$':
+            return 'dollar';
+          case '$$':
+            return 'doubleDollar';
+          case '$$$':
+            return 'tripleDollar';
+          case '$$$$':
+            return 'quadrupleDollar';
+          default:
+            return price;
+        }
+      });
+      newSearchParams.set('price', readablePrices.join(','));
+    }
+    if (selectedDiet.length > 0) {
+      newSearchParams.set('diet', selectedDiet.join(','));
+    }
+    newSearchParams.set('df', selectedDeliveryFee);
+    
+  
+    setFilteredRestaurants(!filterRestaurants);
+    navigate(`?${newSearchParams.toString()}`);
+  };
+
+
+  // Category filter Handle
+  const handleClickCategory = (categoryName) => {
+    // console.log(categoryName, 'categoryName');
+    setSelectedCategories((prevSelected) =>
+      prevSelected.includes(categoryName)
+        ? prevSelected.filter((category) => category !== categoryName)
+        : [...prevSelected, categoryName]
+    );
+  }
+ 
+
+  // Price Filter Handle
+  const handleClickPrice = (priceTag) => {
+    setSelectedPrices((prevSelected) =>
+      prevSelected.includes(priceTag)
+        ? prevSelected.filter((price) => price !== priceTag)
+        : [...prevSelected, priceTag]
+    );
+  }
+
+  // Diet Filter Handle
+  const handleClickDiet = (dietTag) => {
+    setSelectedDiet((prevSelected) =>
+      prevSelected.includes(dietTag)
+        ? prevSelected.filter((diet) => diet !== dietTag)
+        : [...prevSelected, dietTag]
+    );
+  }
+
+  // Delivery Fee Filter Handle
+  const handleClickDeliveryFee = (deliveryFee) => {
+    setSelectedDeliveryFee(deliveryFee);
+  }
+
+  // update Call on These states changes
+  useEffect(() => {
+    updateURL();
+    localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
+  }, [selectedCategories, selectedPrices, selectedDiet, selectedDeliveryFee]);
 
   return (
     <div className="bg-white">
@@ -177,7 +304,7 @@ export const HomeFilters = () => {
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
           <Dialog as="div" className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>
-            {console.log(restaurantsByUserLocation, 'restaurantsByUserLocation')}
+            {console.log(selectedPrices, 'selectedPrices')}
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -408,7 +535,11 @@ export const HomeFilters = () => {
                           </div>
                     </li>
                   ))} */}
-                  <CategoryFilter subCategories={subCategories} />
+                  <CategoryFilter
+                    subCategories={subCategories}
+                    alredyselectedCategories={selectedCategories}
+                    handleClickCategory={handleClickCategory}
+                  />
                 </ul>
 
                 {filters.map((section) => (
@@ -434,13 +565,22 @@ export const HomeFilters = () => {
                           </>
                           : <>
                                 {section.opt === 'price-tabs' ? 
-                                  <PriceFilter /> 
+                                  <PriceFilter
+                                    alredyselectedPrices={selectedPrices}
+                                    handleClickPrice={handleClickPrice}
+                                  /> 
                               : <>
                                   {section.opt === 'delivery-fee' ?
-                                    <DeliveryFeeFilter />
+                                      <DeliveryFeeFilter
+                                        alredyselectedDeliveryFee={selectedDeliveryFee}
+                                        handleClickDeliveryFee={handleClickDeliveryFee}
+                                      />
                                 :<>
                                   {section.opt === 'dietary' ?
-                                          <DietFilter />
+                                          <DietFilter
+                                            alredyselectedDiet={selectedDiet}
+                                            handleClickDiet={handleClickDiet}
+                                          />
                                     : null}
                                 </>}
                               </>}

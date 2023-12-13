@@ -1,42 +1,7 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { PopularRestaurant } from "./restaurants/Restaurants";
-import { SectionHeading } from "../minor-components/headings/SectionHeading";
-import { baseURL } from "../../../constants/baseURL";
 import { HomeScreenHeader } from "./restaurants/HomeScreenHeader";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { getRestaurantsByUserLocation } from "../../../redux/Actions/RestaurantAction";
-import { useAlert } from "react-alert";
 import {HomeFilters} from "../minor-components/filter/HomeFilter";
 
 export const IndexHome = () => {
-
-    // const dispatch = useDispatch();
-    // const navigate = useNavigate();
-    // const alert = useAlert();
-    // const location = useLocation();
-
-    // const [locationFromIndexPage, setLocationFromIndexPage] = useState();
-
-    // const { restaurantsByUserLocation } = useSelector(
-    //     (state) => state.restaurantReducer
-    // );
-
-    // useEffect(() => {
-    //     const Geomatery = localStorage.getItem('geomatery');
-    //     if (Geomatery) {
-    //         if (Object.keys(JSON.parse(Geomatery)).length) {
-    //             setLocationFromIndexPage(JSON.parse(Geomatery))
-    //         }
-    //     }
-    // }, [])
-
-    // useEffect(() => {
-    //     if (locationFromIndexPage) {
-    //         dispatch(getRestaurantsByUserLocation(locationFromIndexPage, navigate, alert))
-    //     }
-    // }, [locationFromIndexPage])
 
     return (
         <>
