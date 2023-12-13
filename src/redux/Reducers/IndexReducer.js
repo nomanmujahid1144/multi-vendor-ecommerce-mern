@@ -4,6 +4,8 @@ import usersReducer from './UserReducers';
 import categoryReducer from './CategoryReducer';
 import restaurantReducer from './RestaurantReducer';
 import cartReducer from './CartReducers';
+import websiteReducer from './WebsiteReducer';
+
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
 const rootReducer = combineReducers({
@@ -12,6 +14,7 @@ const rootReducer = combineReducers({
     usersReducer,
     categoryReducer,
     restaurantReducer,
+    websiteReducer,
     cartReducer
 });
 

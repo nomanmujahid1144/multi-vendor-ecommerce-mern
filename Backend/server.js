@@ -57,6 +57,7 @@ const limiter = rateLimit({
 const user = require("./routes/user");
 const admin = require("./routes/admin");
 const restaurant = require("./routes/restaurant");
+const website = require("./routes/website");
 const announcement = require("./routes/announcement");
 const faqs = require("./routes/faqs");
 const about = require("./routes/about");
@@ -84,6 +85,7 @@ app.use(cors());
 app.use("/api/v1/user", user);
 app.use("/api/v1/admin", admin);
 app.use("/api/v1/restaurant", restaurant);
+app.use("/api/v1/website", website);
 app.use("/api/v1/announcement", announcement);
 app.use("/api/v1/about", about);
 app.use("/api/v1/blog", blog);

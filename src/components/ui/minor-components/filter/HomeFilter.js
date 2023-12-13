@@ -13,6 +13,7 @@ import DeliveryFeeFilter from './DeliveryFeeFilter'
 import CategoryFilter from './CategoryFilter'
 import DietFilter from './DietFilters'
 import { isTaxInRange } from '../../../../constants/helpingFunctions'
+import { getWebsiteDefaultDataByUserLocation } from '../../../../redux/Actions/WebsiteAction'
 
 // const sortOptions = [
 //   { name: 'Most Popular', href: '#', current: true },
@@ -104,6 +105,9 @@ export const HomeFilters = () => {
   const { restaurantsByUserLocation } = useSelector(
       (state) => state.restaurantReducer
   );
+  const { homeData } = useSelector(
+      (state) => state.websiteReducer
+  );
 
   useEffect(() => {
     const Geomatery = localStorage.getItem('geomatery');
@@ -117,6 +121,7 @@ export const HomeFilters = () => {
   useEffect(() => {
     if (locationFromIndexPage) {
       dispatch(getRestaurantsByUserLocation(locationFromIndexPage, navigate, alert))
+      dispatch(getWebsiteDefaultDataByUserLocation(locationFromIndexPage, navigate, alert))
     }
   }, [locationFromIndexPage]);
 
@@ -316,7 +321,6 @@ export const HomeFilters = () => {
             >
               <div className="fixed inset-0 bg-black bg-opacity-25" />
             </Transition.Child>
-
             <div className="fixed inset-0 z-40 flex">
               <Transition.Child
                 as={Fragment}

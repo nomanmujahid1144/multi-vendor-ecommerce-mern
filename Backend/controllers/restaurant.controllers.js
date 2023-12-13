@@ -343,15 +343,15 @@ exports.getRestaurantsByUserLocation = async (req, res, next) => {
     console.log(req.body, "order Body")
   
     try {
-      const adminRadius = await Restaurant.find({ formattedAddress: req.body.formattedAddress });
-      console.log(adminRadius, 'adminRadius')
-      if (adminRadius.length < 1) {
-        return res.status(403).json({
-          success: false,
-          message: "Service Not Available in Specified Area",
-          data: null,
-        });
-      }
+    //   const adminRadius = await Restaurant.find({ formattedAddress: req.body.formattedAddress });
+    //   console.log(adminRadius, 'adminRadius')
+    //   if (adminRadius.length < 1) {
+    //     return res.status(403).json({
+    //       success: false,
+    //       message: "Service Not Available in Specified Area",
+    //       data: null,
+    //     });
+    //   }
   
       //checking if User is with in location limits 
       let comparingCoor = await Restaurant.find({
@@ -404,7 +404,7 @@ exports.getRestaurantsByUserLocation = async (req, res, next) => {
             return restaurant;
         });
 
-          console.log(totalDistance, 'Distance')
+        console.log(totalDistance, 'Distance')
           
         // Use Promise.all to wait for all promises to resolve
         Promise.all(promises)
