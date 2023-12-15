@@ -16,6 +16,7 @@ const DeliveryPickupToggle = () => {
     if (location.pathname === '/home') {
       const searchParams = new URLSearchParams(location.search);
       searchParams.set('diningMode', diningMode);
+      console.log(defaultDeliveryFee, 'defaultDeliveryFee')
       searchParams.set('df', defaultDeliveryFee);
       navigate(`?${searchParams.toString()}`);
     }

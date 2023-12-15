@@ -34,7 +34,7 @@ var settings = {
     dots: false,
     infinite: false,
     speed: 1000,
-    slidesToShow: 8,
+    slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
     variableWidth: false,
@@ -45,7 +45,7 @@ var settings = {
             breakpoint: 1300,
             settings: {
                 speed: 1000,
-                slidesToShow: 5,
+                slidesToShow: 4,
                 slidesToScroll: 1,
                 initialSlide: 0,
                 variableWidth: false,
@@ -156,7 +156,6 @@ var settingsCategories = {
         }
     ]
 };
-
 var settingsStaticBanners = {
     centerMode: false,
     infinite: true,
@@ -278,7 +277,6 @@ export const SlickSliderCategories = ({ children }) => {
       
     )
 }
-
 export const SlickSliderStaticBanners = ({ children }) => {
     return (
     

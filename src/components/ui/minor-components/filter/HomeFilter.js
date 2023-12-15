@@ -14,6 +14,10 @@ import CategoryFilter from './CategoryFilter'
 import DietFilter from './DietFilters'
 import { isTaxInRange } from '../../../../constants/helpingFunctions'
 import { getWebsiteDefaultDataByUserLocation } from '../../../../redux/Actions/WebsiteAction'
+import { SectionHeading } from '../headings/SectionHeading'
+import { Category } from '../category/Category'
+import { SlickSlider, SlickSliderStaticBanners } from '../slider/SlickSlider'
+import { SingleProduct } from '../../major-components/product/SingleProduct'
 
 // const sortOptions = [
 //   { name: 'Most Popular', href: '#', current: true },
@@ -64,6 +68,8 @@ export const HomeFilters = () => {
   const [locationFromIndexPage, setLocationFromIndexPage] = useState();
   const [filterRestaurants, setFilteredRestaurants] = useState(false);
   const [filterProducts, setFilteredProducts] = useState([]);
+  const [defaultProducts, setDefaultProducts] = useState([]);
+  const [defaultData, setDefaultData] = useState(false);
 
   // Category Filter State
   const initialSelectedCategories = params.get('category')
@@ -128,15 +134,7 @@ export const HomeFilters = () => {
   
   const applyFilters = (restaurants, diningMode, selectedCategories, selectedPrices, selectedDiets, deliveryFee) => {
     
-    // console.log(restaurants, 'restaurants')
-    // console.log(diningMode, 'diningMode')
-    // console.log(selectedCategories,'selectedCategories')
-    // console.log(selectedDiets, 'selectedDiets')
-    
     let filteredRestaurants = restaurants;
-    
-    console.log(filterRestaurants, 'filterRestaurants')
-    console.log(selectedPrices, 'selectedPrices')
 
     // Apply dining mode filter
     filteredRestaurants = filteredRestaurants.filter((restaurant) => {
@@ -203,23 +201,24 @@ export const HomeFilters = () => {
 
   useEffect(() => {
 
-    if (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0) {
+    if (defaultData && (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0)) {
+      // Apply filters and get the updated list of restaurants
+      const filteredList = applyFilters(
+        restaurantsByUserLocation,
+        diningMode,
+        categories,
+        prices,
+        diets,
+        deliveryFee
+      );
+      // Log the filtered list
+      setFilteredProducts(filteredList);
+    } else {
+      setDefaultProducts(homeData);
     }
-    // Apply filters and get the updated list of restaurants
-    const filteredList = applyFilters(
-      restaurantsByUserLocation,
-      diningMode,
-      categories,
-      prices,
-      diets,
-      deliveryFee
-    );
 
-    // Log the filtered list
-    console.log('Filtered Restaurants:', filteredList);
-    setFilteredProducts(filteredList);
     
-  }, [diningMode, filterRestaurants])
+  }, [diningMode, filterRestaurants, defaultData])
 
 
 
@@ -259,13 +258,13 @@ export const HomeFilters = () => {
     
   
     setFilteredRestaurants(!filterRestaurants);
+    setDefaultData(true)
     navigate(`?${newSearchParams.toString()}`);
   };
 
 
   // Category filter Handle
   const handleClickCategory = (categoryName) => {
-    // console.log(categoryName, 'categoryName');
     setSelectedCategories((prevSelected) =>
       prevSelected.includes(categoryName)
         ? prevSelected.filter((category) => category !== categoryName)
@@ -301,7 +300,7 @@ export const HomeFilters = () => {
   useEffect(() => {
     updateURL();
     localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
-  }, [selectedCategories, selectedPrices, selectedDiet, selectedDeliveryFee]);
+  }, [selectedCategories, selectedPrices, selectedDiet, selectedDeliveryFee, diningMode]);
 
   return (
     <div className="bg-white">
@@ -309,7 +308,6 @@ export const HomeFilters = () => {
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
           <Dialog as="div" className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>
-            {console.log(selectedPrices, 'selectedPrices')}
             <Transition.Child
               as={Fragment}
               enter="transition-opacity ease-linear duration-300"
@@ -449,10 +447,15 @@ export const HomeFilters = () => {
             </div>
           </Dialog>
         </Transition.Root>
-
         <main className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between  pb-6 pt-24">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">All stores</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+              {defaultData && (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0) ? filterProducts.length : 'All'} stores
+              <span className='flex justify-between'>
+                <p>as</p>
+                <p>as</p>
+              </span>
+            </h1>
             <div className="flex items-center">
               {/* <Menu as="div" className="relative inline-block text-left">
                 <div>
@@ -599,18 +602,77 @@ export const HomeFilters = () => {
 
               {/* Product grid */}
               <div className="lg:col-span-3">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:grid-cols-3">
-                    {filterProducts?.map((restaurant) => (
+                  {defaultData && (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0) ?
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:grid-cols-3">
+                      {filterProducts?.map((restaurant) => (
                         <PopularRestaurant
+                          goToSingleRestaurant={`/restaurant/${restaurant._id}`}
+                          restaurantName={restaurant.restaurantName}
+                          restaurantCoverImage={baseURL + restaurant.restaurantCoverImage}
+                          restaurantMinDeliveryTime={restaurant.minDeliveryTime}
+                          restaurantMaxDeliveryTime={restaurant.maxDeliveryTime}
+                          restaurantTimeStamp={restaurant.timeStamp}
+                          />
+                        ))}
+                    </div>
+                  :
+                    <main className="pos-app w-full pb-6 transition-all duration-[.25s]" >
+                      <SectionHeading
+                        heading="Categories"
+                      />
+                      <Category
+                        Categories={defaultProducts?.categories}
+                      />
+                      <SectionHeading
+                        heading="Products Under $40"
+                      />
+                      <SlickSlider className="flex">
+                        {defaultProducts?.discountedProducts?.map((product, index) => (  
+                          <div key={index} className='p-4'>
+                            <SingleProduct
+                              productId={product._id}
+                              productName={product.name}
+                              productPrice={product.price}
+                              productPhoto={baseURL + product.productPhoto}
+                              // getId={handleCart}
+                            />
+                          </div>
+                        ))}
+                      </SlickSlider>
+                      <SectionHeading
+                        heading="Restaurants Near You"
+                      />
+                      <SlickSliderStaticBanners>
+                        {defaultProducts?.restaurantsNear?.map((restaurant) => (
+                          <div className='px-2'>
+                            <PopularRestaurant
+                              goToSingleRestaurant={`/restaurant/${restaurant._id}`}
+                              restaurantName={restaurant.restaurantName}
+                              restaurantCoverImage={baseURL + restaurant.restaurantCoverImage}
+                              restaurantMinDeliveryTime={restaurant.minDeliveryTime}
+                              restaurantMaxDeliveryTime={restaurant.maxDeliveryTime}
+                              restaurantTimeStamp={restaurant.timeStamp}
+                              />
+                          </div>
+                        ))}
+                      </SlickSliderStaticBanners>
+                      <SectionHeading
+                        heading="All Restaurants"
+                      />
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:grid-cols-3">
+                        {defaultProducts?.restaurants?.map((restaurant) => (
+                          <PopularRestaurant
                             goToSingleRestaurant={`/restaurant/${restaurant._id}`}
                             restaurantName={restaurant.restaurantName}
                             restaurantCoverImage={baseURL + restaurant.restaurantCoverImage}
                             restaurantMinDeliveryTime={restaurant.minDeliveryTime}
                             restaurantMaxDeliveryTime={restaurant.maxDeliveryTime}
                             restaurantTimeStamp={restaurant.timeStamp}
-                        />
-                    ))}
-                </div>
+                            />
+                          ))}
+                      </div>
+                    </main>
+                  }
               </div>
 
             </div>
