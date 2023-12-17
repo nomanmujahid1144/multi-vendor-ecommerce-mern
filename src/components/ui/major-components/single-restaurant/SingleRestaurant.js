@@ -37,11 +37,11 @@ export const SingleRestaurant = () => {
   }, [restaurantById])
 
 
-  const handleCart = (id) => {
-    const product = restaurant.products.find((product) => product._id === id);
+  const handleCart = (productId, restaurantId) => {
+    // const product = restaurant.products.find((product) => product._id === id);
     const details = {
-      productId: product._id,
-      restaurantId: product.restaurantId
+      productId: productId,
+      restaurantId: restaurantId
     }
     dispatch(addToCart(details, alert));
   }

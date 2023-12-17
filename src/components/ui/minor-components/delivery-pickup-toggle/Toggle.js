@@ -6,24 +6,18 @@ const DeliveryPickupToggle = () => {
   const navigate = useNavigate();
 
   const initialMode = new URLSearchParams(location.search).get('diningMode') || 'DELIVERY';
-  const initialDeliveryFee = new URLSearchParams(location.search).get('df') || 3;
-
   const [diningMode, setDiningMode] = useState(initialMode);
-  const [defaultDeliveryFee, setDefaultDeliveryFee] = useState(initialDeliveryFee);
 
   // Handle navigation when diningMode changes
   useEffect(() => {
     if (location.pathname === '/home') {
       const searchParams = new URLSearchParams(location.search);
       searchParams.set('diningMode', diningMode);
-      console.log(defaultDeliveryFee, 'defaultDeliveryFee')
-      searchParams.set('df', defaultDeliveryFee);
       navigate(`?${searchParams.toString()}`);
     }
-  }, [diningMode, defaultDeliveryFee, location.pathname, location.search, navigate]);
+  }, [diningMode, location.pathname, location.search, navigate]);
 
   const handleToggle = (mode) => {
-    console.log(mode, 'mode')
     // Toggle between DELIVERY and PICKUP
     // const newMode = diningMode === 'DELIVERY' ? 'PICKUP' : 'DELIVERY';
     if (diningMode !== mode) {

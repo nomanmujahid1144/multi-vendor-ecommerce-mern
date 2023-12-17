@@ -4,6 +4,7 @@ export const SingleProduct = (props) => {
 
     const {
         productId,
+        restaurantId,
         productName,
         productPrice,
         productPhoto,
@@ -11,7 +12,7 @@ export const SingleProduct = (props) => {
     } = props;
 
     const handleCart = () => {
-        getId(productId);
+        getId(productId, restaurantId);
     }
 
     return (

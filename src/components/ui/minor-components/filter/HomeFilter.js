@@ -18,6 +18,7 @@ import { SectionHeading } from '../headings/SectionHeading'
 import { Category } from '../category/Category'
 import { SlickSlider, SlickSliderStaticBanners } from '../slider/SlickSlider'
 import { SingleProduct } from '../../major-components/product/SingleProduct'
+import { addToCart } from '../../../../redux/Actions/CartAction'
 
 // const sortOptions = [
 //   { name: 'Most Popular', href: '#', current: true },
@@ -63,8 +64,6 @@ export const HomeFilters = () => {
   const diets = params.get('diet') || [];
   const deliveryFee = params.get('df') || 3;
 
-  
-
   const [locationFromIndexPage, setLocationFromIndexPage] = useState();
   const [filterRestaurants, setFilteredRestaurants] = useState(false);
   const [filterProducts, setFilteredProducts] = useState([]);
@@ -105,7 +104,7 @@ export const HomeFilters = () => {
       const decodedDiets = urlDiets.split(',').map(diet => diet.trim());
     }
   // delivery fee Filter State
-  const [selectedDeliveryFee, setSelectedDeliveryFee] = useState(3)
+  const [selectedDeliveryFee, setSelectedDeliveryFee] = useState(deliveryFee)
   const urlDeliveryFee = params.get('df');
 
   const { restaurantsByUserLocation } = useSelector(
@@ -302,6 +301,25 @@ export const HomeFilters = () => {
     localStorage.setItem('selectedCategories', JSON.stringify(selectedCategories));
   }, [selectedCategories, selectedPrices, selectedDiet, selectedDeliveryFee, diningMode]);
 
+  const handleResetFilter = () => {
+    setSelectedCategories([]);
+    setSelectedPrices([]);
+    setSelectedDiet([]);
+    setSelectedDeliveryFee(3);
+    const newSearchParams = new URLSearchParams();
+    newSearchParams.set('diningMode', 'DELIVERY');
+  }
+
+
+  const handleCart = (productId, restaurantId) => {
+    // const product = restaurant.products.find((product) => product._id === id);
+    const details = {
+      productId: productId,
+      restaurantId: restaurantId
+    }
+    dispatch(addToCart(details, alert));
+  }
+
   return (
     <div className="bg-white">
       <div>
@@ -451,10 +469,11 @@ export const HomeFilters = () => {
           <div className="flex items-baseline justify-between  pb-6 pt-24">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
               {defaultData && (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0) ? filterProducts.length : 'All'} stores
-              <span className='flex justify-between'>
-                <p>as</p>
-                <p>as</p>
-              </span>
+              {defaultData && (selectedCategories.length > 0 || selectedPrices.length > 0 || selectedDiet.length > 0) ?
+                <span className='flex justify-between'>
+                  <p onClick={handleResetFilter} className='font-thin text-lg cursor-pointer hover:underline mt-3'>Clear All</p>
+                </span>
+                :null}
             </h1>
             <div className="flex items-center">
               {/* <Menu as="div" className="relative inline-block text-left">
@@ -627,14 +646,16 @@ export const HomeFilters = () => {
                         heading="Products Under $40"
                       />
                       <SlickSlider className="flex">
+                        {console.log(defaultProducts?.discountedProducts, 'defaultProducts?.discountedProducts')}
                         {defaultProducts?.discountedProducts?.map((product, index) => (  
                           <div key={index} className='p-4'>
                             <SingleProduct
                               productId={product._id}
+                              restaurantId={product.restaurantId}
                               productName={product.name}
                               productPrice={product.price}
                               productPhoto={baseURL + product.productPhoto}
-                              // getId={handleCart}
+                              getId={handleCart}
                             />
                           </div>
                         ))}
