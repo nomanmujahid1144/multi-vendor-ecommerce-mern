@@ -140,7 +140,6 @@ export const HomeFilters = () => {
       // Your condition for dining mode
       return restaurant.diningMode?.toLowerCase() === diningMode?.toLowerCase();
     });
-  
     // Apply category filter
     if (selectedCategories.length > 0) {
       filteredRestaurants = filteredRestaurants.filter((restaurant) => {
@@ -183,11 +182,11 @@ export const HomeFilters = () => {
     }
 
     // Filter restaurants based on the selected delivery fee
-    filteredRestaurants = filteredRestaurants.filter(restaurant => {
-      return isTaxInRange(restaurant.tax, selectedDeliveryFee);
-    });
-
-
+    if (deliveryFee) { 
+      filteredRestaurants = filteredRestaurants.filter((restaurant) => {
+        return isTaxInRange(restaurant.tax, deliveryFee);
+      });
+    }
   
     return filteredRestaurants;
     // setFilteredProducts(filteredRestaurants)
@@ -253,8 +252,7 @@ export const HomeFilters = () => {
     if (selectedDiet.length > 0) {
       newSearchParams.set('diet', selectedDiet.join(','));
     }
-    newSearchParams.set('df', selectedDeliveryFee);
-    
+    newSearchParams.set('df', selectedDeliveryFee);  
   
     setFilteredRestaurants(!filterRestaurants);
     setDefaultData(true)
@@ -646,7 +644,6 @@ export const HomeFilters = () => {
                         heading="Products Under $40"
                       />
                       <SlickSlider className="flex">
-                        {console.log(defaultProducts?.discountedProducts, 'defaultProducts?.discountedProducts')}
                         {defaultProducts?.discountedProducts?.map((product, index) => (  
                           <div key={index} className='p-4'>
                             <SingleProduct

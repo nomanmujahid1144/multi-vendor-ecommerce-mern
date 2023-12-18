@@ -33,7 +33,7 @@ export const SingleProduct = (props) => {
                 </div>
                 <div className="product-image-container">
                     <div className="product-image">
-                    <img loading="lazy" src={productPhoto} />
+                    <img loading="lazy" className="object-contain" src={productPhoto} />
                     </div>
                 </div>
                 <div className="product-delivery-time-wrapper">

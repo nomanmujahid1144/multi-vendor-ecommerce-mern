@@ -113,7 +113,7 @@ export const AddProductsForm = (props) => {
 
     const getCategory = async () => {
         try {
-            const res = await axiosInstance.get('/api/v1/category/getcategories')
+            const res = await axiosInstance.get('/api/v1/category/getrestaurantcategories')
             if (res.data.success) {
                 setCategoryItems(res.data.data)
             }
