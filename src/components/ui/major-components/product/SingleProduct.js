@@ -20,7 +20,8 @@ export const SingleProduct = (props) => {
 
     return (
     <>
-        <Modal open={isOpen} onClose={() => setIsOpen(false)}>asd
+        <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+            
         </Modal>
         <div className='product-card'>
             <div className='product-inner'>
