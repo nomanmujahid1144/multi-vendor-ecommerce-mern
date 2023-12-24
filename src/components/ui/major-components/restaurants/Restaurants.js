@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import restaurantImage6 from '../../../../assets/blog/6.jpg'
+import { Modal } from '../../minor-components/model/Model'
 
 export const PopularRestaurant = (props) => {
 

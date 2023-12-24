@@ -2232,7 +2232,7 @@ input.form-control, select.form-control {
   width: 100%;
   position: sticky;
   top: -39px;
-  z-index: 999;
+  z-index: 50;
 }
 .shop-header-inner-container-first{
   box-sizing: border-box;
@@ -2709,7 +2709,7 @@ input.form-control, select.form-control {
   position: absolute;
   top: 5%;
   right: 5%;
-  z-index: 99;
+  z-index: 50;
 }
 .product-fav-btn{
   display: inline-flex;

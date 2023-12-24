@@ -1,6 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { Modal } from "../../minor-components/model/Model";
+import { useState } from 'react';
 
 export const SingleProduct = (props) => {
+    const [isOpen, setIsOpen] = useState(false);
 
     const {
         productId,
@@ -16,6 +19,9 @@ export const SingleProduct = (props) => {
     }
 
     return (
+    <>
+        <Modal open={isOpen} onClose={() => setIsOpen(false)}>asd
+        </Modal>
         <div className='product-card'>
             <div className='product-inner'>
             <div className="product-image-wrapper">
@@ -32,8 +38,8 @@ export const SingleProduct = (props) => {
                     </div>
                 </div>
                 <div className="product-image-container">
-                    <div className="product-image">
-                    <img loading="lazy" className="object-contain" src={productPhoto} />
+                    <div className="product-image"  onClick={() => { setIsOpen(true)}}>
+                        <img loading="lazy" className="object-contain" src={productPhoto} />
                     </div>
                 </div>
                 <div className="product-delivery-time-wrapper">
@@ -60,5 +66,6 @@ export const SingleProduct = (props) => {
             </div>
             </div>
         </div>
+    </>
     )
 }
