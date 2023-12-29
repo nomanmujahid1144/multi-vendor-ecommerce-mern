@@ -20,6 +20,9 @@ import { ConfirmPassword } from "./components/ui/major-components/credentials/Co
 import { RestaurantRegistration } from "./components/ui/major-components/restaurants/RestaurantRegistration";
 import ProtectedRoutes from "./components/layout/ProtectedRoute";
 import { useJsApiLoader } from "@react-google-maps/api";
+import { AllCategories } from "./components/ui/major-components/category/AllCategories";
+import { SingleCategory } from "./components/ui/major-components/category/SingleCategory";
+import { AllDiscountedProducts } from "./components/ui/major-components/product/AllDiscountedProducts";
 
 const places = ["places"]
 function App() {
@@ -42,6 +45,12 @@ function App() {
           <Route path="/home" element={<IndexHome />} />
           <Route path="/restaurant/createAccount" element={<RestaurantRegistration />} />
           <Route path="/restaurant/:restaurantId" element={<SingleRestaurant />} />
+        
+          <Route path="/categories" element={<AllCategories />} />
+          <Route path="/category/:id" element={<SingleCategory />} />
+        
+          <Route path="/discounted-products" element={<AllDiscountedProducts />} />
+          
           <Route path="/shop/:shopName" element={<ProductFilters />} />
           <Route path="/blogs" element={<Blogs />} />
         

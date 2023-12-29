@@ -13,6 +13,7 @@ const {
   getdiscountproducts,
   getFeatureProducts,
   getProductByBrand,
+  getProductById,
   getProductByBrandWithCategory,
   deleteProducts,
   updateProduct,
@@ -29,6 +30,7 @@ router.get("/get-restaurant-products", checkAuth, getAllProducts);
 router.get("/getproducts", getAllRestaurantProducts);
 router.get("/getdiscountproducts", getdiscountproducts);
 router.get("/getfeatureproducts", getFeatureProducts);
+router.get("/getproductbyId", getProductById);
 router.get("/getproductbybrand", getProductByBrand);
 router.get("/getproductbybrandwithcategory", getProductByBrandWithCategory);
 

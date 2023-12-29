@@ -636,12 +636,18 @@ export const HomeFilters = () => {
                     <main className="pos-app w-full pb-6 transition-all duration-[.25s]" >
                       <SectionHeading
                         heading="Categories"
+                        isAddLink={true}
+                        isSearchlink={false}
+                        link="/categories"
                       />
                       <Category
                         Categories={defaultProducts?.categories}
                       />
                       <SectionHeading
                         heading="Products Under $40"
+                        isAddLink={true}
+                        isSearchlink={false}
+                        link="/discounted-products"
                       />
                       <SlickSlider className="flex">
                         {defaultProducts?.discountedProducts?.map((product, index) => (  

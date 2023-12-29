@@ -260,9 +260,10 @@ exports.getdiscountproducts = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-exports.getdiscountproducts = async (req, res, next) => {
+exports.getProductByBrand = async (req, res, next) => {
+    console.log(req.query , "Brand")
     try {
-        const products = await Product.find({ price: { $lt: 40 } })
+        const products = await Product.find({'brand' :  req.query.brand})
         console.log(products)
         if (products.length <= 0) {
             return res.status(200).json({
@@ -281,22 +282,22 @@ exports.getdiscountproducts = async (req, res, next) => {
         return next(new ErrorResponse(err, 400))
     }
 }
-exports.getProductByBrand = async (req, res, next) => {
+exports.getProductById = async (req, res, next) => {
     console.log(req.query , "Brand")
     try {
-        const products = await Product.find({'brand' :  req.query.brand})
-        console.log(products)
-        if (products.length <= 0) {
+        const product = await Product.findOne({ _id :  mongoose.Types.ObjectId(req.query.id)})
+        console.log(product)
+        if (!product) {
             return res.status(200).json({
                 success: true,
                 data: [],
-                message: 'No products found'
+                message: 'Product Not found'
             })
         }
         return res.status(200).json({
             success: true,
-            data: products,
-            message: "Products found"
+            data: product,
+            message: "Product found"
         })
     }
     catch (err) {

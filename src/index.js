@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import store from './redux/Reducers/IndexReducer';
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
+import { SearchProvider } from './Context/SearchContext';
 
 const options = {
   // you can also just use 'bottom center'
@@ -23,7 +24,9 @@ root.render(
     <Provider store={store}>
       <BrowserRouter >
         <AlertProvider template={AlertTemplate} {...options}>
-          <App />
+          <SearchProvider>
+            <App />
+          </SearchProvider>
         </AlertProvider>
       </BrowserRouter>
     </Provider>
