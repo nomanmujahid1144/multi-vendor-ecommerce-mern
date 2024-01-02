@@ -68,8 +68,7 @@ export const getRestaurantsByUserLocation = (obj, navigate, alert) => {
                     alert.show('error while adding product')
                 }
             }).catch((err) => {
-                // console.log(err, 'ERROR')
-                // alert.show(err.response?.data?.message)
+                alert.show(err.response?.data?.message)
             })
 
     }

@@ -129,8 +129,27 @@ export default function Places() {
             <RestaurantDetails restaurantID={restaurantId} />
           </Modal>
           <div className="flex flex-col items-center justify-between gap-4">
-            <PlacesAutocomplete setSelected={setSelected} selected={selected} radius={radius} setRadius={setRadius} setFormattedAddress={setFormattedAddress} setShopName={setShopName} setPhoneNumber={setPhoneNumber} setMerchantId={setMerchantId} setMerchantKey={setMerchantKey} setDelivery={setDelivery} />
-            <Map selected={selected} radius={radius} shopName={shopName} delivery={delivery} merchantId={merchantId} merchantKey={merchantKey} phoneNumber={phoneNumber} />
+            <PlacesAutocomplete
+              setSelected={setSelected}
+              selected={selected}
+              radius={radius}
+              setRadius={setRadius}
+              setFormattedAddress={setFormattedAddress}
+              setShopName={setShopName}
+              setPhoneNumber={setPhoneNumber}
+              setMerchantId={setMerchantId}
+              setMerchantKey={setMerchantKey}
+              setDelivery={setDelivery}
+            />
+            <Map
+              selected={selected}
+              radius={radius}
+              shopName={shopName}
+              delivery={delivery}
+              merchantId={merchantId}
+              merchantKey={merchantKey}
+              phoneNumber={phoneNumber} 
+            />
             {selected && radius && shopName && delivery && phoneNumber && merchantId && merchantKey &&
               <button onClick={addRadious} className='py-2 px-4 bg-myBg text-xs rounded-lg hover:bg-[#efca37]'>
                 Add Place

@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getCartLength } from '../../../../redux/Actions/CartAction';
 import DeliveryPickupToggle from '../../minor-components/delivery-pickup-toggle/Toggle';
+import { Modal } from '../../minor-components/model/Model';
+import { ChangeLocationInModel } from '../../minor-components/location/ChangeLocationInModel';
 
 const navigation = [
     { name: 'Home', href: '/home', current: true },
@@ -33,6 +35,7 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const alert = useAlert();
+    const [isOpen, setIsOpen] = useState(false);
     const [formattedAddress, setFormattedAddress] = useState('');
 
     useEffect(() => {
@@ -92,12 +95,19 @@ export const Navbar = () => {
                                 <div className="hidden sm:ml-6 sm:block">
                                     <div className="flex space-x-4">
                                         {formattedAddress ?
-                                            <div className='location-container'>
+                                            <div className='location-container' onClick={() => { setIsOpen(true)}}>
                                                 <FontAwesomeIcon className='icons-style !h-3' icon="fa-solid fa-location-dot" />
                                                 <p className='location-inner-typo-address !text-primaryTextColor'>{formattedAddress}</p>
                                                 <FontAwesomeIcon className='icons-style !h-3' icon="fa-solid fa-chevron-down" />
                                             </div>
                                         : null}
+                                        <Modal
+                                            open={isOpen}
+                                            onClose={() => setIsOpen(false)}
+                                            extraClasses="w-[90%] lg:w-[45%] md:w-[30%] sm:w-[95%]"
+                                        >
+                                            <ChangeLocationInModel />
+                                        </Modal>
                                         <DeliveryPickupToggle />
                                         {navigation.map((item) => (
                                             <Fragment key={item.name}>

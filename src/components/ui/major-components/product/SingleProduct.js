@@ -21,12 +21,16 @@ export const SingleProduct = (props) => {
 
     return (
     <>
-        <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-            <SingleProductDetailsInModel
-                productId={productId}
-                restaurantId={restaurantId}
-            />
-        </Modal>
+            <Modal
+                open={isOpen}
+                onClose={() => setIsOpen(false)}
+                extraClasses="w-[90%] lg:w-[30%] md:w-[30%] sm:w-[95%]"
+            >
+                <SingleProductDetailsInModel
+                    productId={productId}
+                    restaurantId={restaurantId}
+                />
+            </Modal>
         <div className='product-card'>
             <div className='product-inner'>
                 <div className="product-image-wrapper">
