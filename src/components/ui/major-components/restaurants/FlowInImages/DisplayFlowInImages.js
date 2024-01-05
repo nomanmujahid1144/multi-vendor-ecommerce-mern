@@ -1,8 +1,8 @@
-import banner1 from '../../../../../assets/static-banners/user.png'
+import banner1 from '../../../../../assets/static-banners/user1.png'
 import curved1 from '../../../../../assets/static-banners/pre.svg'
 import curved2 from '../../../../../assets/static-banners/post.svg'
-import banner2 from '../../../../../assets/static-banners/deliverlyMan.png'
-import banner3 from '../../../../../assets/static-banners/reached.png'
+import banner2 from '../../../../../assets/static-banners/deliveryMan1.png'
+import banner3 from '../../../../../assets/static-banners/reached1.png'
 import { SlickSliderStaticBanners } from '../../../minor-components/slider/SlickSlider';
 
 export const DisplayFlowInImages = () => {

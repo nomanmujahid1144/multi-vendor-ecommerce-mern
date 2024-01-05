@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 
 
 exports.getWebsiteDefaultDataByUserLocation = async (req, res, next) => {
-    console.log(req.body, "order Body")
+    console.log(req.body, "order Body IN Website")
   
     try {
 
@@ -36,10 +36,10 @@ exports.getWebsiteDefaultDataByUserLocation = async (req, res, next) => {
         });
     
         if (allRestaurantsInLocation.length < 1) {
-            return res.status(403).json({
-            success: false,
+            return res.status(200).json({
+            success: true,
             message: "Service Not Available in Specified Area ",
-            data: null,
+            data: {},
             });
         } else {
   

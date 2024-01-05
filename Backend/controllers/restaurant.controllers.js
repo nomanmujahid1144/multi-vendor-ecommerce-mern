@@ -373,8 +373,8 @@ exports.getRestaurantsByUserLocation = async (req, res, next) => {
   
       if (comparingCoor.length < 1) {
         console.log('i n here')
-        return res.status(403).json({
-          success: false,
+        return res.status(200).json({
+          success: true,
           message: "Service Not Available in Specified Area ",
           data: null,
         });

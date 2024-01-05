@@ -2216,6 +2216,46 @@ input.form-control, select.form-control {
   box-shadow: none;
   color: rgba(55, 65, 81, 0.26);
 }
+.location-picker-search-button-simple{
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  outline: 0px;
+  border: 0px;
+  margin: 0px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  text-decoration: none;
+  font-weight: 600;
+  font-family: Rubik, sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  min-width: 100%;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  text-transform: none;
+  background-color: rgb(255, 121, 24);
+  width: 100%;
+  padding: 11px 7px 12px;
+  border-radius: 0px 6px 6px 0px;
+  color: rgb(249, 250, 252) !important;
+}
+.location-picker-search-button-border-rounded-simple{
+  border-radius: 6px;
+}
+.location-picker-search-button-simple:disabled{
+  pointer-events: none;
+  cursor: default;
+  box-shadow: none;
+  color: rgba(55, 65, 81, 0.26);
+}
 .location-picker-divider{
   margin: 0px;
   text-transform: none;
@@ -3196,6 +3236,9 @@ input[type="range"]::-webkit-slider-thumb {
   }
   .location-picker-search-button{
     max-width: 150px !important;
+  }
+  .location-picker-search-button-simple{
+    max-width: 100% !important;
   }
   .location-picker-divider  {
     margin: 0px !important;

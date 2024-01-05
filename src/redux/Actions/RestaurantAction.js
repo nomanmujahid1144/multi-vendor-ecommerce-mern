@@ -55,10 +55,6 @@ export const getRestaurantsByUserLocation = (obj, navigate, alert) => {
                 if (res.data.success === true) {
                     localStorage.setItem('geomatery', JSON.stringify(obj));
                     navigate('/home', { state: { geomatery: obj } })
-                    // dispatch({
-                    //     type: ACTION_TYPES.USER_FORMATTED_ADDRESS_FOR_RESTAURANT_LOCATION,
-                    //     payload: obj.formattedAddress
-                    // })
                     dispatch({
                         type: ACTION_TYPES.GET_RESTAURANTS_BY_USER_LOCATION,
                         payload: res.data.data

@@ -100,7 +100,7 @@ const extractAddress = (place) => {
   return address;
 }
 
-export const ChangeLocationInModel = () => {
+export const ChangeLocationInModel = (props) => {
 
 
     const navigate = useNavigate();
@@ -129,9 +129,6 @@ export const ChangeLocationInModel = () => {
         if (place && place.geometry) {
             const latitude = place.geometry.location.lat();
             const longitude = place.geometry.location.lng();
-            
-            console.log("Latitude:", latitude);
-            console.log("Longitude:", longitude);
             setSelected({ lat: latitude, lng:  longitude });
             // Use latitude and longitude for your purposes, e.g., display on a map or store in a database
         }
@@ -177,35 +174,41 @@ export const ChangeLocationInModel = () => {
     }, []);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        let obj = {
-            geometry: { coordinates: [lats, lngs] },
-            formattedAddress: formatted_address,
-        }
-        dispatch(getRestaurantsByUserLocation(obj, navigate, alert))
+      e.preventDefault();
+
+      const { lat, lng } = selected;
+      
+      let obj = {
+          geometry: { coordinates: [lat, lng] },
+          formattedAddress: formatted_address,
+      }
+      dispatch(getRestaurantsByUserLocation(obj, navigate, alert)).then(() => {
+        setTimeout(() => {
+          props.onClose();
+        }, 2000);
+      })
     }
+    
 
     return (
         <div className="px-3 pt-4 pb-3">
             <div className="location-picker-container !max-w-full">
-                <form className="w-full" onSubmit={handleSubmit}>
-                    <div className="location-picker-inner">
-                        <div className="location-picker-search">
-                            <div className="location-picker-search-Bg">
-                                <div className="w-full">
-                                    <div className="location-picker-search-Bg-inner !flex !flex-row">
-                                        <FontAwesomeIcon size='lg' className='text-textColor top-3 left-4 absolute bg-transparent z-10' icon="fa-location-dot" />
-                                        <input ref={searchInput} className="h-[44px] pl-10 pr-16 border-0 outline-0  hover:outline-0 focus:shadow-none focus:outline-none relative opacity-50 w-full rounded-lg  text-sm" type="text" name="search" placeholder="Enter your delivery address..." />
-                                        {/* <FontAwesomeIcon onClick={findMyLocation} size='lg' className='text-textColor absolute bg-transparent z-20 cursor-pointer top-3 right-4' icon="fa-location-crosshairs" /> */}
-                                    </div>
+                <div className="location-picker-inner">
+                    <div className="location-picker-search">
+                        <div className="location-picker-search-Bg">
+                            <div className="w-full">
+                                <div className="location-picker-search-Bg-inner !flex !flex-row">
+                                    <FontAwesomeIcon size='lg' className='text-textColor top-3 left-4 absolute bg-transparent z-10' icon="fa-location-dot" />
+                                    <input ref={searchInput} className="h-[44px] pl-10 pr-16 border-0 outline-0  hover:outline-0 focus:shadow-none focus:outline-none relative opacity-50 w-full rounded-lg  text-sm" type="text" name="search" placeholder="Enter your delivery address..." />
+                                    {/* <FontAwesomeIcon onClick={findMyLocation} size='lg' className='text-textColor absolute bg-transparent z-20 cursor-pointer top-3 right-4' icon="fa-location-crosshairs" /> */}
                                 </div>
                             </div>
-                            <button type='submit' className="location-picker-search-button">
-                                Pick Location
-                            </button>
                         </div>
+                        {/* <button type='submit' className="location-picker-search-button">
+                            Pick Location
+                        </button> */}
                     </div>
-                </form>
+                </div>
             </div>
             <div className='py-4 h-2/6'>
                 <Map
@@ -213,11 +216,9 @@ export const ChangeLocationInModel = () => {
                     radius={radius}
                 />
             </div>
-            <div className='!max-w-full'>
-                <button className="location-picker-search-button location-picker-search-button-border-rounded">
-                    Pick Location
-                </button>
-            </div>
+            <button onClick={handleSubmit} className="location-picker-search-button-simple location-picker-search-button-border-rounded-simple ">
+                Pick Location
+            </button>
         </div>
     )
 }
